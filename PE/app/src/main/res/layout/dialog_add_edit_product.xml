@@ -1,0 +1,22 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:padding="16dp"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
+    <EditText android:id="@+id/edt_product_name"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:hint="Name"/>
+    <EditText android:id="@+id/edt_product_price"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:hint="Price" android:inputType="numberDecimal"/>
+    <EditText android:id="@+id/edt_product_desc"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:hint="Description"/>
+    <EditText android:id="@+id/edt_product_image"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:hint="Image URL"/>
+    <!-- Thay EditText bằng Spinner -->
+    <Spinner
+        android:id="@+id/spinner_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

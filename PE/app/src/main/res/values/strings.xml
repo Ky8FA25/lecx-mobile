@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">PE</string>
+    <string-array name="sort_options">
+        <item>Sort by price ↑ </item>
+        <item>Sort by price ↓ </item>
+    </string-array>
+</resources>
