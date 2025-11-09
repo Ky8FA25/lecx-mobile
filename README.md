@@ -1,1 +1,0 @@
-# lecx-mobile
