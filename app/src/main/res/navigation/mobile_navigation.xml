@@ -23,6 +23,17 @@
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile_current_user" />
 
+    <fragment
+        android:id="@+id/navigation_flashcard_learning"
+        android:name="com.example.lecx_mobile.views.Flashcard.FlashcardLearningFragment"
+        android:label="Flashcard Learning"
+        tools:layout="@layout/fragment_flashcard_learning">
+        <argument
+            android:name="quizLearningId"
+            app:argType="integer"
+            android:defaultValue="1" />
+    </fragment>
+
 <!--    <fragment-->
 <!--        android:id="@+id/navigation_products"-->
 <!--        android:name="com.example.onlineshop.view.product.ProductFragment"-->
