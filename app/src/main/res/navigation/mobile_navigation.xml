@@ -7,37 +7,37 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.onlineshop.view.home.HomeFragment"
+        android:name="com.example.lecx_mobile.views.Home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_cart"
-        android:name="com.example.onlineshop.view.cart.CartFragment"
-        android:label="@string/title_cart"
-        tools:layout="@layout/fragment_cart" />
+        android:id="@+id/navigation_quiz_discover"
+        android:name="com.example.lecx_mobile.views.Quiz.QuizDiscoverFragment"
+        android:label="@string/title_quiz"
+        tools:layout="@layout/fragment_quiz_discover" />
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.example.onlineshop.view.profile.ProfileFragment"
+        android:name="com.example.lecx_mobile.views.Profile.OtherUserProfileFragment"
         android:label="@string/title_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile_current_user" />
 
-    <fragment
-        android:id="@+id/navigation_products"
-        android:name="com.example.onlineshop.view.product.ProductFragment"
-        android:label="@string/title_products"
-        tools:layout="@layout/fragment_product" />
+<!--    <fragment-->
+<!--        android:id="@+id/navigation_products"-->
+<!--        android:name="com.example.onlineshop.view.product.ProductFragment"-->
+<!--        android:label="@string/title_products"-->
+<!--        tools:layout="@layout/fragment_product" />-->
 
-    <fragment
-        android:id="@+id/navigation_product_detail"
-        android:name="com.example.onlineshop.view.product.ProductDetailFragment"
-        android:label="Product Detail"
-        tools:layout="@layout/fragment_product_detail" >
-        <argument
-            android:name="productId"
-            app:argType="integer" />
-    </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/navigation_product_detail"-->
+<!--        android:name="com.example.onlineshop.view.product.ProductDetailFragment"-->
+<!--        android:label="Product Detail"-->
+<!--        tools:layout="@layout/fragment_product_detail" >-->
+<!--        <argument-->
+<!--            android:name="productId"-->
+<!--            app:argType="integer" />-->
+<!--    </fragment>-->
 
 <!--    <fragment-->
 <!--        android:id="@+id/navigation_dashboard"-->

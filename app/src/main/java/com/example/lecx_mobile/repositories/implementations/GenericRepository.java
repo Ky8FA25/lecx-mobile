@@ -20,6 +20,7 @@ public class GenericRepository<T> implements IGenericRepository<T> {
     protected final DatabaseReference dbRef;
     protected final Class<T> clazz;
 
+    // init: IAccountRepository repo = new AccountRepository();
     public GenericRepository(DatabaseReference dbRef, Class<T> clazz) {
         this.dbRef = dbRef;
         this.clazz = clazz;

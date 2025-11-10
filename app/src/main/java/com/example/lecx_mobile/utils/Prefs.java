@@ -9,7 +9,7 @@ public class Prefs {
         return ctx.getSharedPreferences(Constants.PREF_AUTH, Context.MODE_PRIVATE);
     }
 
-    public static void saveSession(Context ctx, int userId, String email, boolean remember, boolean isAdmin) {
+    public static void saveSession(Context ctx, int userId, String email, boolean remember) {
         sp(ctx).edit()
                 .putInt(Constants.KEY_USER_ID, userId)
                 .putString(Constants.KEY_EMAIL, email)

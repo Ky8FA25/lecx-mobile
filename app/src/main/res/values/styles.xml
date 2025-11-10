@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="RoundedShapeOval" parent="">
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Material3.Corner.Full</item>
+    </style>
+    <style name="CircleImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="FragmentContainerStyle">
+        <!-- Tránh bị che bởi AppBar và BottomNav -->
+        <item name="android:paddingTop">24dp</item>
+        <item name="android:paddingBottom">72dp</item>
+
+        <!-- Nền chung -->
+        <item name="android:background">#F5F5F5</item>
+
+        <!-- Cho phép cuộn nếu nội dung dài -->
+        <item name="android:scrollbars">vertical</item>
+    </style>
+
+</resources>
