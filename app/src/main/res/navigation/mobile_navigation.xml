@@ -19,17 +19,17 @@
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.example.lecx_mobile.views.Profile.OtherUserProfileFragment"
+        android:name="com.example.lecx_mobile.views.Profile.CurrentUserProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile_current_user" />
 
     <fragment
-        android:id="@+id/navigation_quiz_detail"
-        android:name="com.example.lecx_mobile.views.Quiz.QuizDetailFragment"
-        android:label="Chi tiết bộ thẻ"
-        tools:layout="@layout/fragment_quiz_detail" >
+        android:id="@+id/navigation_flashcard_learning"
+        android:name="com.example.lecx_mobile.views.Flashcard.FlashcardLearningFragment"
+        android:label="Flashcard Learning"
+        tools:layout="@layout/fragment_flashcard_learning">
         <argument
-            android:name="quizId"
+            android:name="quizLearningId"
             app:argType="integer"
             android:defaultValue="1" />
     </fragment>

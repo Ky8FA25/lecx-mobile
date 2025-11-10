@@ -3,7 +3,7 @@ package com.example.lecx_mobile.utils;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class FirebaseUtils {
+public class FirebaseDatabaseUtils {
 
     // URL của Realtime Database (Giả sử bạn đang dùng vùng asia-southeast1)
     private static final String DB_URL =

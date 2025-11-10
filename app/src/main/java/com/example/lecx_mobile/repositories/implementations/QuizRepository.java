@@ -2,7 +2,7 @@ package com.example.lecx_mobile.repositories.implementations;
 
 import com.example.lecx_mobile.models.Quiz;
 import com.example.lecx_mobile.repositories.interfaces.IQuizRepository;
-import com.example.lecx_mobile.utils.FirebaseUtils;
+import com.example.lecx_mobile.utils.FirebaseDatabaseUtils;
 import com.example.lecx_mobile.utils.PredicateUtils;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public class QuizRepository
         implements IQuizRepository {
 
     public QuizRepository() {
-        super(FirebaseUtils.quizzesRef(), Quiz.class);
+        super(FirebaseDatabaseUtils.quizzesRef(), Quiz.class);
     }
 
     public CompletableFuture<List<Quiz>> findByKeyword(String keyword) {
