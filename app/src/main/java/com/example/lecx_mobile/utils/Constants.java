@@ -24,6 +24,12 @@ public final class Constants {
     public static final String NODE_QUESTIONS      = "Questions";
 
     // =======================================================
+    // 📂 FIREBASE REALTIME DATABASE NODES
+    // =======================================================
+    public static final String FOLDER_AVATARS = "avatars";
+    public static final String FOLDER_FLASHCARD_IMAGES = "flashcard-images";
+
+    // =======================================================
     // 💾 SHARED PREFERENCES KEYS
     // =======================================================
 
