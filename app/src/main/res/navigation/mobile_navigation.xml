@@ -23,6 +23,17 @@
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile_current_user" />
 
+    <fragment
+        android:id="@+id/navigation_quiz_detail"
+        android:name="com.example.lecx_mobile.views.Quiz.QuizDetailFragment"
+        android:label="Chi tiết bộ thẻ"
+        tools:layout="@layout/fragment_quiz_detail" >
+        <argument
+            android:name="quizId"
+            app:argType="integer"
+            android:defaultValue="1" />
+    </fragment>
+
 <!--    <fragment-->
 <!--        android:id="@+id/navigation_products"-->
 <!--        android:name="com.example.onlineshop.view.product.ProductFragment"-->
