@@ -17,6 +17,7 @@ import com.google.android.material.button.MaterialButton;
 public class HomeFragment extends Fragment {
 
     private MaterialButton btnTestFlashcard;
+    private MaterialButton btnQuizDetail;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -34,6 +35,13 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         btnTestFlashcard = view.findViewById(R.id.btnTestFlashcard);
+        btnQuizDetail = view.findViewById(R.id.btnTestQuizDetail);
+
+        btnQuizDetail.setOnClickListener(v -> {
+            Bundle args = new Bundle();
+            args.putInt("quizId",1);
+            Navigation.findNavController(v).navigate(R.id.navigation_quiz_detail, args);
+        });
         
         btnTestFlashcard.setOnClickListener(v -> {
             // Navigate to Flashcard Learning with quizLearningId = 1 (demo)

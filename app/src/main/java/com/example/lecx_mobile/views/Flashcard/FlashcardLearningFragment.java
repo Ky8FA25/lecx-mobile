@@ -50,6 +50,8 @@ public class FlashcardLearningFragment extends Fragment {
     private TextView tvBackText, tvBackDescription;
     private ProgressBar progressBar;
     private FloatingActionButton btnKnow, btnDontKnow;
+    private View loadingOverlay; // Loading overlay view
+    private View mainContent; // Main content view
 
     // Data
     private int quizLearningId = 1; // 📌 Mặc định = 1, có thể nhận từ arguments
@@ -70,6 +72,10 @@ public class FlashcardLearningFragment extends Fragment {
     
     // 🔄 Trạng thái lật thẻ
     private boolean isShowingFront = true;
+
+    // 🔄 Flags để track loading state
+    private boolean isQuizLoaded = false;
+    private boolean isFlashcardsLoaded = false;
 
     // Repositories
     private final IQuizLearningRepository quizLearningRepo = new QuizLearningRepository();
@@ -104,6 +110,10 @@ public class FlashcardLearningFragment extends Fragment {
     }
 
     private void initViews(View view) {
+        // Loading overlay và main content
+        loadingOverlay = view.findViewById(R.id.loadingOverlay);
+        mainContent = view.findViewById(R.id.mainContent);
+
         btnBack = view.findViewById(R.id.btnBack);
         tvQuizTitle = view.findViewById(R.id.tvQuizTitle);
         tvQuizSubtitle = view.findViewById(R.id.tvQuizSubtitle);
@@ -127,6 +137,11 @@ public class FlashcardLearningFragment extends Fragment {
         actionButtonsLayout = view.findViewById(R.id.actionButtonsLayout);
         btnKnow = view.findViewById(R.id.btnKnow);
         btnDontKnow = view.findViewById(R.id.btnDontKnow);
+
+        // Ẩn content ban đầu
+        if (mainContent != null) {
+            mainContent.setVisibility(View.GONE);
+        }
     }
 
     private void setupListeners() {
@@ -156,11 +171,15 @@ public class FlashcardLearningFragment extends Fragment {
      * Bước 1: Nhận quizLearningId và load QuizLearning từ Firebase
      */
     private void loadQuizLearning() {
+        // Hiển thị loading
+        setLoading(true);
+
         quizLearningRepo.getById(quizLearningId).thenAccept(ql -> {
             if (getActivity() == null) return;
             
             getActivity().runOnUiThread(() -> {
                 if (ql == null) {
+                    setLoading(false);
                     Toast.makeText(getContext(), "QuizLearning not found!", Toast.LENGTH_SHORT).show();
                     Navigation.findNavController(requireView()).navigateUp();
                     return;
@@ -177,9 +196,11 @@ public class FlashcardLearningFragment extends Fragment {
             });
         }).exceptionally(e -> {
             if (getActivity() != null) {
-                getActivity().runOnUiThread(() ->
-                        Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show()
-                );
+                getActivity().runOnUiThread(() -> {
+                    setLoading(false);
+                    Toast.makeText(getContext(), "Error loading QuizLearning: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Navigation.findNavController(requireView()).navigateUp();
+                });
             }
             return null;
         });
@@ -222,6 +243,10 @@ public class FlashcardLearningFragment extends Fragment {
      * Load Quiz info và tất cả Flashcards của Quiz đó
      */
     private void loadQuizAndFlashcards() {
+        // Reset flags
+        isQuizLoaded = false;
+        isFlashcardsLoaded = false;
+
         // 📖 Load Quiz
         quizRepo.getById(quizLearning.quizId).thenAccept(quiz -> {
             if (getActivity() == null) return;
@@ -230,37 +255,78 @@ public class FlashcardLearningFragment extends Fragment {
                 if (quiz != null) {
                     currentQuiz = quiz;
                     tvQuizTitle.setText(quiz.title);
-                    tvQuizSubtitle.setText(quiz.description);
-                }
-            });
-        });
-        
-        // 🃏 Load tất cả Flashcards của Quiz
-        flashcardRepo.getAll().thenAccept(allCards -> {
-            if (getActivity() == null) return;
-            
-            // Filter flashcards theo quizId
-            allFlashcards.clear();
-            for (Flashcard card : allCards) {
-                if (card.quizId == quizLearning.quizId) {
-                    allFlashcards.add(card);
-                }
-            }
-            
-            getActivity().runOnUiThread(() -> {
-                if (allFlashcards.isEmpty()) {
-                    Toast.makeText(getContext(), "No flashcards found", Toast.LENGTH_SHORT).show();
+                    tvQuizSubtitle.setText(quiz.description != null ? quiz.description : "");
+                    isQuizLoaded = true;
+                } else {
+                    // Quiz không tồn tại
+                    setLoading(false);
+                    Toast.makeText(getContext(), "Quiz not found!", Toast.LENGTH_SHORT).show();
                     Navigation.findNavController(requireView()).navigateUp();
                     return;
                 }
                 
-                // 📋 Tạo LIST: flashcards chưa học (trừ đi learnedIds)
-                filterUnlearnedFlashcards();
-                
-                // 🎯 Bước 4: Hiển thị flashcard đầu tiên
-                displayInitialFlashcard();
+                // Kiểm tra xem cả hai đã load xong chưa
+                checkAndFinishLoading();
             });
+        }).exceptionally(e -> {
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(() -> {
+                    setLoading(false);
+                    Toast.makeText(getContext(), "Error loading Quiz: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Navigation.findNavController(requireView()).navigateUp();
+                });
+            }
+            return null;
         });
+        
+        // 🃏 Load tất cả Flashcards của Quiz
+        flashcardRepo.where(flashcard -> flashcard.quizId == quizLearning.quizId)
+                .thenAccept(allCards -> {
+                    if (getActivity() == null) return;
+                    
+                    getActivity().runOnUiThread(() -> {
+                        if (allCards == null || allCards.isEmpty()) {
+                            setLoading(false);
+                            Toast.makeText(getContext(), "No flashcards found", Toast.LENGTH_SHORT).show();
+                            Navigation.findNavController(requireView()).navigateUp();
+                            return;
+                        }
+                        
+                        // Lưu danh sách flashcards
+                        allFlashcards.clear();
+                        allFlashcards.addAll(allCards);
+                        
+                        // 📋 Tạo LIST: flashcards chưa học (trừ đi learnedIds)
+                        filterUnlearnedFlashcards();
+                        
+                        isFlashcardsLoaded = true;
+                        
+                        // Kiểm tra xem cả hai đã load xong chưa
+                        checkAndFinishLoading();
+                    });
+                }).exceptionally(e -> {
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> {
+                            setLoading(false);
+                            Toast.makeText(getContext(), "Error loading flashcards: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Navigation.findNavController(requireView()).navigateUp();
+                        });
+                    }
+                    return null;
+                });
+    }
+
+    /**
+     * Kiểm tra xem cả quiz và flashcards đã load xong chưa, nếu xong thì ẩn loading và hiển thị UI
+     */
+    private void checkAndFinishLoading() {
+        if (isQuizLoaded && isFlashcardsLoaded) {
+            // 🎯 Bước 4: Hiển thị flashcard đầu tiên
+            displayInitialFlashcard();
+            
+            // Ẩn loading và hiển thị content
+            setLoading(false);
+        }
     }
     
     // ========================================================================
@@ -615,6 +681,40 @@ public class FlashcardLearningFragment extends Fragment {
                 Navigation.findNavController(requireView()).navigateUp();
             }
         }, 2000);
+    }
+
+    // ========================================================================
+    // 🔷 LOADING OVERLAY METHODS
+    // ========================================================================
+
+    /**
+     * Hiển thị/ẩn Loading Overlay khi đang load dữ liệu
+     */
+    private void setLoading(boolean loading) {
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(() -> {
+                // Hiển thị/ẩn loading overlay
+                if (loadingOverlay != null) {
+                    loadingOverlay.setVisibility(loading ? View.VISIBLE : View.GONE);
+                }
+                
+                // Hiển thị/ẩn main content
+                if (mainContent != null) {
+                    mainContent.setVisibility(loading ? View.GONE : View.VISIBLE);
+                }
+                
+                // Disable các nút khi đang load
+                if (btnBack != null) {
+                    btnBack.setEnabled(!loading);
+                }
+                if (btnKnow != null) {
+                    btnKnow.setEnabled(!loading);
+                }
+                if (btnDontKnow != null) {
+                    btnDontKnow.setEnabled(!loading);
+                }
+            });
+        }
     }
 }
 
