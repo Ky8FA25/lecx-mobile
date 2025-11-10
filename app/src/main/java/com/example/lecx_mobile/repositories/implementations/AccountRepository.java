@@ -2,7 +2,7 @@ package com.example.lecx_mobile.repositories.implementations;
 
 import com.example.lecx_mobile.models.Account;
 import com.example.lecx_mobile.repositories.interfaces.IAccountRepository;
-import com.example.lecx_mobile.utils.FirebaseUtils;
+import com.example.lecx_mobile.utils.FirebaseDatabaseUtils;
 import java.util.concurrent.CompletableFuture;
 
 public class AccountRepository
@@ -10,7 +10,7 @@ public class AccountRepository
         implements IAccountRepository {
 
     public AccountRepository() {
-        super(FirebaseUtils.accountsRef(), Account.class);
+        super(FirebaseDatabaseUtils.accountsRef(), Account.class);
     }
     @Override
     public CompletableFuture<Account> getByEmail(String email) {

@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.example.lecx_mobile.views.Profile.OtherUserProfileFragment"
+        android:name="com.example.lecx_mobile.views.Profile.CurrentUserProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile_current_user" />
 
