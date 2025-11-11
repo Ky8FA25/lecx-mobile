@@ -8,7 +8,7 @@
     android:padding="32dp"
     android:gravity="center"
     android:background="@android:color/white"
-    tools:context=".views.Auth.RegisterActivity">
+    tools:context=".views.auth.RegisterActivity">
 
     <ImageView
         android:id="@+id/ivLogo"

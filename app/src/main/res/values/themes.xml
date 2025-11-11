@@ -6,4 +6,15 @@
     </style>
 
     <style name="Theme.Lecxmobile" parent="Base.Theme.Lecxmobile" />
+
+    <style name="Theme.MyApp" parent="Theme.MaterialComponents.Light.NoActionBar">
+
+        <item name="android:statusBarColor">@color/white</item>
+
+        <item name="android:windowLightStatusBar">true</item>
+
+        <item name="colorPrimary">@color/primary</item>
+
+        <item name="colorAccent">@color/primary</item>
+    </style>
 </resources>

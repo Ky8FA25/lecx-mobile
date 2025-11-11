@@ -2,7 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="white_2">#f5f5f5</color>
     <color name="primary">#67B5B5</color>
+    <color name="ic_launcher_background">#67B5B5</color>
     <color name="primary_dark">#4A9B9B</color>
     <color name="primary_light">#85D4D4</color>
     <color name="primary_very_light">#E0F5F5</color>

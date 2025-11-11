@@ -1,4 +1,4 @@
-package com.example.lecx_mobile.views.Profile;
+package com.example.lecx_mobile.views.profile;
 
 import android.os.Bundle;
 
