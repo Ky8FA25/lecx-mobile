@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvDialogTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thêm thẻ"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp"
+            android:gravity="center" />
+
+        <!-- Front Text input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Mặt trước"
+            android:layout_marginBottom="16dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etFrontText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:minLines="2"
+                android:maxLines="4"
+                android:gravity="top" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Back Text input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Mặt sau"
+            android:layout_marginBottom="16dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etBackText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:minLines="2"
+                android:maxLines="4"
+                android:gravity="top" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Image section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ảnh mặt trước (tùy chọn)"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Image preview -->
+        <ImageView
+            android:id="@+id/ivImagePreview"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:contentDescription="Image preview"
+            android:background="@color/background_light"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Button to select image -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSelectImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Chọn ảnh"
+            android:textSize="14sp"
+            android:textColor="@color/primary"
+            android:backgroundTint="@color/primary_very_light"
+            app:cornerRadius="20dp"
+            app:strokeColor="@color/primary"
+            app:strokeWidth="1dp"
+            android:paddingVertical="10dp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Button to remove image -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRemoveImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Xóa ảnh"
+            android:textSize="14sp"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@android:color/holo_red_dark"
+            app:cornerRadius="20dp"
+            android:paddingVertical="10dp"
+            android:visibility="gone"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Action buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hủy"
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary"
+                android:backgroundTint="@android:color/transparent"
+                android:paddingHorizontal="16dp"
+                android:layout_marginEnd="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lưu"
+                android:textSize="14sp"
+                android:textColor="@android:color/white"
+                android:backgroundTint="@color/primary"
+                app:cornerRadius="20dp"
+                android:paddingHorizontal="24dp" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
+
