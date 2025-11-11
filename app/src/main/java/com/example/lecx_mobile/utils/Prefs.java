@@ -30,6 +30,10 @@ public class Prefs {
         return sp(ctx).getString(Constants.KEY_EMAIL, null);
     }
 
+    public static String getAvatar(Context ctx) {
+        return sp(ctx).getString(Constants.KEY_AVATAR, null);
+    }
+
     public static boolean isRemember(Context ctx) {
         return sp(ctx).getBoolean(Constants.KEY_REMEMBER, false);
     }
