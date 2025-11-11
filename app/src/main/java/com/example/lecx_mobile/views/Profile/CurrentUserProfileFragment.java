@@ -1,4 +1,4 @@
-package com.example.lecx_mobile.views.profile;
+package com.example.lecx_mobile.views.Profile;
 
 import android.content.Intent;
 import android.os.Bundle;
