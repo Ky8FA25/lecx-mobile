@@ -45,7 +45,7 @@ public class HomeFragment extends Fragment {
 
         btnQuizDetail.setOnClickListener(v -> {
             Bundle args = new Bundle();
-            args.putInt("quizId",1);
+            args.putInt("quizId",2);
             Navigation.findNavController(v).navigate(R.id.navigation_quiz_detail, args);
         });
         

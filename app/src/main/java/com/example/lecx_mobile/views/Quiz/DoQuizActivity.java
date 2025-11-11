@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import com.example.lecx_mobile.utils.GeminiUtils;
 import com.google.android.material.button.MaterialButton;
 
 import com.bumptech.glide.Glide;
@@ -25,7 +26,8 @@ import com.example.lecx_mobile.repositories.implementations.FlashcardRepository;
 import com.example.lecx_mobile.repositories.implementations.QuestionRepository;
 import com.example.lecx_mobile.repositories.interfaces.IFlashcardRepository;
 import com.example.lecx_mobile.repositories.interfaces.IQuestionRepository;
-import com.example.lecx_mobile.utils.GeminiService;
+import com.example.lecx_mobile.utils.GeminiUtils;
+import com.example.lecx_mobile.utils.LoadingUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,7 +54,7 @@ public class DoQuizActivity extends AppCompatActivity {
     // Repositories
     private final IQuestionRepository questionRepository = new QuestionRepository();
     private final IFlashcardRepository flashcardRepository = new FlashcardRepository();
-    private final GeminiService geminiService = new GeminiService();
+    private final GeminiUtils geminiService = new GeminiUtils();
 
     // Data
     private int quizId;
@@ -265,7 +267,7 @@ public class DoQuizActivity extends AppCompatActivity {
      * Load questions từ database hoặc tạo mới từ flashcards
      */
     private void loadQuestions() {
-        setLoading(true);
+        LoadingUtils.showLoading(binding.loadingOverlay);
 
         // Bước 1: Kiểm tra xem quiz đã có câu hỏi chưa
         questionRepository.where(q -> q.quizId == quizId)
@@ -276,17 +278,21 @@ public class DoQuizActivity extends AppCompatActivity {
                             questions = existingQuestions;
                             score = 0; // Reset score
                             binding.tvScore.setText("00");
-                            setLoading(false);
+                            LoadingUtils.hideLoading(binding.loadingOverlay);
                             showQuestion(0);
                         });
                     } else {
                         // Quiz chưa có câu hỏi → tạo mới từ flashcards
+                        runOnUiThread(() -> {
+                            // Hiển thị loading với message khi đang generate
+                            LoadingUtils.showLoading(binding.loadingOverlay);
+                        });
                         generateQuestionsFromFlashcards();
                     }
                 })
                 .exceptionally(e -> {
                     runOnUiThread(() -> {
-                        setLoading(false);
+                        LoadingUtils.hideLoading(binding.loadingOverlay);
                         Toast.makeText(this, "Lỗi khi tải câu hỏi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         finish();
                     });
@@ -303,12 +309,17 @@ public class DoQuizActivity extends AppCompatActivity {
                 .thenAccept(flashcards -> {
                     if (flashcards == null || flashcards.isEmpty()) {
                         runOnUiThread(() -> {
-                            setLoading(false);
+                            LoadingUtils.hideLoading(binding.loadingOverlay);
                             Toast.makeText(this, "Quiz không có flashcard nào", Toast.LENGTH_SHORT).show();
                             finish();
                         });
                         return;
                     }
+
+                    // Đảm bảo loading được hiển thị khi đang generate với Gemini
+                    runOnUiThread(() -> {
+                        LoadingUtils.showLoading(binding.loadingOverlay);
+                    });
 
                     // Tạo questions từ flashcards
                     List<CompletableFuture<Question>> questionFutures = new ArrayList<>();
@@ -339,7 +350,7 @@ public class DoQuizActivity extends AppCompatActivity {
                 })
                 .exceptionally(e -> {
                     runOnUiThread(() -> {
-                        setLoading(false);
+                        LoadingUtils.hideLoading(binding.loadingOverlay);
                         Toast.makeText(this, "Lỗi khi tải flashcards: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         finish();
                     });
@@ -411,7 +422,7 @@ public class DoQuizActivity extends AppCompatActivity {
     private void saveQuestions(List<Question> questionsToSave) {
         if (questionsToSave == null || questionsToSave.isEmpty()) {
             runOnUiThread(() -> {
-                setLoading(false);
+                LoadingUtils.hideLoading(binding.loadingOverlay);
                 Toast.makeText(this, "Không có câu hỏi để lưu", Toast.LENGTH_SHORT).show();
                 finish();
             });
@@ -447,7 +458,7 @@ public class DoQuizActivity extends AppCompatActivity {
                 questions = finalQuestionsToSave;
                 score = 0; // Reset score
                 binding.tvScore.setText("00");
-                setLoading(false);
+                LoadingUtils.hideLoading(binding.loadingOverlay);
                 showQuestion(0);
             });
             return;
@@ -558,9 +569,18 @@ public class DoQuizActivity extends AppCompatActivity {
         TextView tvFinalScore = resultView.findViewById(R.id.tvFinalScore);
         TextView tvCongratulations = resultView.findViewById(R.id.tvCongratulations);
         TextView tvMessage = resultView.findViewById(R.id.tvMessage);
+        ImageView ivCelebrationGif = resultView.findViewById(R.id.ivCelebrationGif);
         MaterialButton btnBackToHome = resultView.findViewById(R.id.btnBackToHome);
         
         tvFinalScore.setText(score + "/" + totalQuestions);
+        
+        // Load GIF từ drawable
+        Glide.with(this)
+                .asGif()
+                .load(R.drawable.celebration)
+                .placeholder(R.drawable.ic_profile) // Placeholder khi đang load
+                .error(R.drawable.ic_profile) // Hiển thị nếu lỗi
+                .into(ivCelebrationGif);
         
         // Customize message based on score
         if (score == totalQuestions) {
@@ -588,16 +608,6 @@ public class DoQuizActivity extends AppCompatActivity {
         });
         
         resultDialog.show();
-    }
-
-    /**
-     * Hiển thị/ẩn loading overlay
-     */
-    private void setLoading(boolean loading) {
-        if (binding != null) {
-            binding.loadingOverlay.setVisibility(loading ? View.VISIBLE : View.GONE);
-            binding.btnNext.setEnabled(!loading);
-        }
     }
 
     @Override
