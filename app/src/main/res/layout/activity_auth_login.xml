@@ -9,7 +9,7 @@
     android:padding="32dp"
     android:gravity="center"
     android:background="@android:color/white"
-    tools:context=".views.Auth.LoginActivity">
+    tools:context=".views.auth.LoginActivity">
 
     <ImageView
         android:id="@+id/ivLogo"
@@ -45,8 +45,7 @@
         app:boxCornerRadiusTopStart="24dp"
         app:boxCornerRadiusTopEnd="24dp"
         app:boxCornerRadiusBottomStart="24dp"
-        app:boxCornerRadiusBottomEnd="24dp"
-        app:startIconTint="#666666">
+        app:boxCornerRadiusBottomEnd="24dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etEmail"
@@ -66,7 +65,6 @@
         app:boxCornerRadiusTopEnd="24dp"
         app:boxCornerRadiusBottomStart="24dp"
         app:boxCornerRadiusBottomEnd="24dp"
-        app:startIconTint="#666666"
         app:endIconMode="password_toggle">
 
         <com.google.android.material.textfield.TextInputEditText

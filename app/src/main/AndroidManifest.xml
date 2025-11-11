@@ -12,18 +12,18 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Lecxmobile">
+        android:theme="@style/Theme.MyApp">
 
         <activity
-            android:name=".views.Auth.RegisterActivity"
+            android:name=".views.auth.RegisterActivity"
             android:exported="false" />
 
         <activity
-            android:name=".views.Auth.LoginActivity"
+            android:name=".views.auth.LoginActivity"
             android:exported="false" />
 
         <activity
-            android:name=".views.Auth.SplashActivity"
+            android:name=".views.auth.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
