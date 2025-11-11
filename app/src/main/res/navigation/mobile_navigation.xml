@@ -7,15 +7,10 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.lecx_mobile.views.Home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
-
-    <fragment
-        android:id="@+id/navigation_homepage"
         android:name="com.example.lecx_mobile.views.Home.HomePageFragment"
-        android:label="@string/title_homepage"
+        android:label="@string/title_home"
         tools:layout="@layout/fragment_home_page" />
+
 
     <fragment
         android:id="@+id/navigation_quiz_discover"
