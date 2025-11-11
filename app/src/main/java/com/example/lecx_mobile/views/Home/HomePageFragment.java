@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lecx_mobile.R;
 import com.example.lecx_mobile.adapters.QuizAdapter;
@@ -52,6 +51,9 @@ public class HomePageFragment extends Fragment {
     private List<Quiz> myQuizzes = new ArrayList<>();
     private Map<Integer, Account> accountMap = new HashMap<>();
     private int currentUserId;
+    
+    // State for learning quizzes layout
+    private boolean isLearningQuizzesVertical = false;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -71,6 +73,7 @@ public class HomePageFragment extends Fragment {
 
         setupRecyclerViews();
         setupAddButton();
+        setupSeeAllButton();
         loadData();
     }
 
@@ -88,9 +91,49 @@ public class HomePageFragment extends Fragment {
 
     private void setupAddButton() {
         binding.fabAddQuiz.setOnClickListener(v -> {
-            // TODO: Navigate to create quiz screen
-            Toast.makeText(requireContext(), "Create Quiz feature coming soon", Toast.LENGTH_SHORT).show();
+            Navigation.findNavController(v).navigate(R.id.naviagtion_add_quiz);
         });
+    }
+
+    private void setupSeeAllButton() {
+        binding.btnToggleViewLearning.setOnClickListener(v -> {
+            toggleLearningQuizzesLayout();
+        });
+    }
+
+    private void toggleLearningQuizzesLayout() {
+        isLearningQuizzesVertical = !isLearningQuizzesVertical;
+        
+        // Tạo adapter mới với layout tương ứng
+        learningQuizAdapter = new QuizAdapter(
+            learningQuizzes, 
+            accountMap, 
+            false, 
+            this::onQuizClick, 
+            null,
+            isLearningQuizzesVertical
+        );
+        
+        // Tạo layout manager mới
+        LinearLayoutManager layoutManager;
+        if (isLearningQuizzesVertical) {
+            // Layout dọc (giống như rvMyQuizzes)
+            layoutManager = new LinearLayoutManager(requireContext());
+            // Icon hiển thị hành động sẽ xảy ra: click để chuyển về grid (horizontal)
+            binding.btnToggleViewLearning.setImageResource(R.drawable.ic_view_grid);
+        } else {
+            // Layout ngang (mặc định)
+            layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
+            // Icon hiển thị hành động sẽ xảy ra: click để chuyển sang list (vertical)
+            binding.btnToggleViewLearning.setImageResource(R.drawable.ic_view_list);
+        }
+        
+        // Áp dụng layout manager và adapter mới
+        binding.rvLearningQuizzes.setLayoutManager(layoutManager);
+        binding.rvLearningQuizzes.setAdapter(learningQuizAdapter);
+        
+        // Cập nhật adapter để refresh data
+        learningQuizAdapter.notifyDataSetChanged();
     }
 
     private void loadData() {
@@ -107,7 +150,7 @@ public class HomePageFragment extends Fragment {
                 .thenCompose(quizLearnings -> {
                     // Lọc quizLearnings của user hiện tại
                     List<QuizLearning> userQuizLearnings = quizLearnings.stream()
-                            .filter(ql -> ql.accountId == currentUserId && ql.status)
+                            .filter(ql -> ql.accountId == currentUserId && !ql.status)
                             .collect(Collectors.toList());
 
                     if (userQuizLearnings.isEmpty()) {

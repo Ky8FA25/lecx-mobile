@@ -97,7 +97,7 @@
                         android:id="@+id/tvEmailVerified"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="✓ Email Verified"
+                        android:text="✓ Đã xác minh email"
                         android:textColor="#4CAF50"
                         android:textSize="12sp"
                         android:visibility="gone" />
@@ -106,7 +106,7 @@
                         android:id="@+id/tvEmailNotVerified"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="✗ Email Not Verified"
+                        android:text="✗ Email chưa xác minh"
                         android:textColor="#F44336"
                         android:textSize="12sp"
                         android:visibility="gone" />
@@ -157,7 +157,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Full Name"
+                            android:text="Tên"
                             android:textStyle="bold"
                             android:textSize="16sp"
                             android:textColor="#333333" />
@@ -176,7 +176,7 @@
                         android:id="@+id/btnEditFullName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Edit"
+                        android:text="Sửa"
                         android:textSize="12sp"
                         app:icon="@android:drawable/ic_menu_edit"
                         app:iconGravity="textStart"
@@ -226,7 +226,7 @@
                         android:id="@+id/btnEditUsername"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Edit"
+                        android:text="Sửa"
                         android:textSize="12sp"
                         app:icon="@android:drawable/ic_menu_edit"
                         app:iconGravity="textStart"
@@ -257,7 +257,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Password"
+                            android:text="Mật khẩu"
                             android:textStyle="bold"
                             android:textSize="16sp"
                             android:textColor="#333333" />
@@ -275,7 +275,7 @@
                         android:id="@+id/btnChangePassword"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Change"
+                        android:text="Đổi"
                         android:textSize="12sp"
                         app:icon="@android:drawable/ic_lock_lock"
                         app:iconGravity="textStart"

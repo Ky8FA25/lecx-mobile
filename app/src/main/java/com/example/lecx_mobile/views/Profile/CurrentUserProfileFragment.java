@@ -183,7 +183,7 @@ public class CurrentUserProfileFragment extends Fragment {
 
     private void uploadAvatar(Uri imageUri) {
         if (currentUser == null) {
-            Toast.makeText(requireContext(), "User not loaded", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Không load được user", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -212,25 +212,25 @@ public class CurrentUserProfileFragment extends Fragment {
         if (currentUser == null) return;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Edit Full Name");
+        builder.setTitle("Sửa tên");
 
         final EditText input = new EditText(requireContext());
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         input.setText(currentUser.fullname);
-        input.setHint("Enter full name");
+        input.setHint("Điền tên");
         builder.setView(input);
 
-        builder.setPositiveButton("Save", (dialog, which) -> {
+        builder.setPositiveButton("Lưu", (dialog, which) -> {
             String newFullName = input.getText().toString().trim();
             if (Validator.isNonEmpty(newFullName)) {
                 currentUser.fullname = newFullName;
                 updateProfile(currentUser);
             } else {
-                Toast.makeText(requireContext(), "Full name cannot be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Không được để trống tên", Toast.LENGTH_SHORT).show();
             }
         });
 
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.setNegativeButton("Hủy", (dialog, which) -> dialog.cancel());
         builder.show();
     }
 
@@ -238,31 +238,31 @@ public class CurrentUserProfileFragment extends Fragment {
         if (currentUser == null) return;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Edit Username");
+        builder.setTitle("Sửa Username");
 
         final EditText input = new EditText(requireContext());
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         input.setText(currentUser.username);
-        input.setHint("Enter username");
+        input.setHint("Điền username");
         builder.setView(input);
 
-        builder.setPositiveButton("Save", (dialog, which) -> {
+        builder.setPositiveButton("Lưu", (dialog, which) -> {
             String newUsername = input.getText().toString().trim();
             if (Validator.isNonEmpty(newUsername)) {
                 currentUser.username = newUsername;
                 updateProfile(currentUser);
             } else {
-                Toast.makeText(requireContext(), "Username cannot be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Username không được trống", Toast.LENGTH_SHORT).show();
             }
         });
 
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.setNegativeButton("Hủy", (dialog, which) -> dialog.cancel());
         builder.show();
     }
 
     private void showChangePasswordDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Change Password");
+        builder.setTitle("Đổi mật khẩu");
 
         View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_change_password, null);
         builder.setView(dialogView);
@@ -271,8 +271,8 @@ public class CurrentUserProfileFragment extends Fragment {
         EditText etNewPassword = dialogView.findViewById(R.id.etNewPassword);
         EditText etConfirmPassword = dialogView.findViewById(R.id.etConfirmPassword);
 
-        builder.setPositiveButton("Change", null);
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.setPositiveButton("Đổi", null);
+        builder.setNegativeButton("Hủy", (dialog, which) -> dialog.cancel());
 
         AlertDialog dialog = builder.create();
         dialog.setOnShowListener(d -> {
@@ -282,13 +282,13 @@ public class CurrentUserProfileFragment extends Fragment {
                 String confirmPassword = etConfirmPassword.getText().toString();
 
                 if (!Validator.isValidPassword(newPassword)) {
-                    etNewPassword.setError("Password must be at least 6 characters");
+                    etNewPassword.setError("Mật khẩu phải có ít nhất 6 chữ cái");
                     etNewPassword.requestFocus();
                     return;
                 }
 
                 if (!Validator.passwordsMatch(newPassword, confirmPassword)) {
-                    etConfirmPassword.setError("Passwords do not match");
+                    etConfirmPassword.setError("Mật khẩu không khớp");
                     etConfirmPassword.requestFocus();
                     return;
                 }
@@ -320,7 +320,7 @@ public class CurrentUserProfileFragment extends Fragment {
                                 currentUser = updatedUser;
                                 bindUserInfo(updatedUser);
                                 checkEmailVerification(updatedUser.email);
-                                Toast.makeText(requireContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(requireContext(), "Cập nhật hồ sơ thành công", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(requireContext(), "Failed to update profile", Toast.LENGTH_SHORT).show();
                             }
@@ -351,7 +351,7 @@ public class CurrentUserProfileFragment extends Fragment {
 
         // Verify current password
         if (!currentPassword.equals(currentUser.password)) {
-            Toast.makeText(requireContext(), "Current password is incorrect", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Sai mật khẩu", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -366,9 +366,9 @@ public class CurrentUserProfileFragment extends Fragment {
                         getActivity().runOnUiThread(() -> {
                             if (updatedUser != null) {
                                 currentUser = updatedUser;
-                                Toast.makeText(requireContext(), "Password changed successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(requireContext(), "Đổi mật khẩu thành công", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(requireContext(), "Failed to change password", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(requireContext(), "Đổi mật khẩu thất bại", Toast.LENGTH_SHORT).show();
                             }
                             setLoading(false);
                         });
@@ -389,13 +389,13 @@ public class CurrentUserProfileFragment extends Fragment {
 
     private void handleVerifyEmail() {
         if (currentUser == null || currentUser.email == null) {
-            Toast.makeText(requireContext(), "User email not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Không tìm được email", Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Check if email is already verified
         if (currentUser.isEmailConfirmed) {
-            Toast.makeText(requireContext(), "Email is already verified", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Email đã được xác minh rồi", Toast.LENGTH_SHORT).show();
             return;
         }
 
