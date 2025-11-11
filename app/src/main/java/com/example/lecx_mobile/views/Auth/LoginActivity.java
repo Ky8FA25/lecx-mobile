@@ -1,4 +1,4 @@
-package com.example.lecx_mobile.views.auth;
+package com.example.lecx_mobile.views.Auth;
 
 import android.content.Intent;
 import android.os.Bundle;
