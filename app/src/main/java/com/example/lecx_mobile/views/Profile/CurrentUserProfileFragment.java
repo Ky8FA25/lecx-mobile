@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.lecx_mobile.R;
+import com.example.lecx_mobile.api.ApiClient;
 import com.example.lecx_mobile.models.Account;
 import com.example.lecx_mobile.repositories.implementations.AccountRepository;
 import com.example.lecx_mobile.repositories.interfaces.IAccountRepository;
@@ -30,6 +31,11 @@ import com.example.lecx_mobile.utils.Prefs;
 import com.example.lecx_mobile.utils.Validator;
 import com.example.lecx_mobile.databinding.FragmentProfileCurrentUserBinding;
 import com.example.lecx_mobile.views.Auth.LoginActivity;
+
+import com.example.lecx_mobile.services.implementations.OtpService;
+import com.example.lecx_mobile.services.interfaces.IOtpService;
+import retrofit2.Retrofit;
+import com.example.lecx_mobile.api.OtpApiResponse;
 
 public class CurrentUserProfileFragment extends Fragment {
 
@@ -47,11 +53,15 @@ public class CurrentUserProfileFragment extends Fragment {
     // OTP Timer
     private CountDownTimer otpTimer;
     private static final long OTP_RESEND_INTERVAL = 60000; // 60 seconds
+    private IOtpService otpService;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Tên binding cần khớp với tên file layout của bạn (fragment_profile.xml)
         binding = FragmentProfileCurrentUserBinding.inflate(inflater, container, false);
+
+        Retrofit retrofit = ApiClient.getClient(getString(R.string.base_url));
+        otpService = new OtpService(retrofit);
 
         // Initialize image picker launcher
         imagePickerLauncher = registerForActivityResult(
@@ -388,18 +398,11 @@ public class CurrentUserProfileFragment extends Fragment {
     // ==================== Email Verification & OTP ====================
 
     private void handleVerifyEmail() {
-        if (currentUser == null || currentUser.email == null) {
-            Toast.makeText(requireContext(), "Không tìm được email", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Check if email is already verified
+        if (currentUser == null || currentUser.email == null) return;
         if (currentUser.isEmailConfirmed) {
-            Toast.makeText(requireContext(), "Email đã được xác minh rồi", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Email đã xác minh", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        // Send OTP first, then show dialog
         sendOTP(currentUser.email);
     }
 
@@ -409,17 +412,16 @@ public class CurrentUserProfileFragment extends Fragment {
      */
     private void sendOTP(String email) {
         setLoading(true);
-
-        // TODO: Replace with actual API call:
-        // Example: apiService.sendOTP(email).thenAccept(success -> {...})
-        // Simulating API call delay
-        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
-            // Simulate successful OTP send
-            // In real implementation, check API response
-            Toast.makeText(requireContext(), "OTP code has been sent to your email", Toast.LENGTH_LONG).show();
-            setLoading(false);
-            showVerifyOtpDialog();
-        }, 1000);
+        otpService.sendOtpAsync(email)
+                .thenAccept(response -> runOnUiThreadSafe(() -> {
+                    Toast.makeText(requireContext(), response.message, Toast.LENGTH_LONG).show();
+                    setLoading(false);
+                    showVerifyOtpDialog();
+                }))
+                .exceptionally(e -> { runOnUiThreadSafe(() -> {
+                    Toast.makeText(requireContext(), "Send OTP failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    setLoading(false);
+                }); return null; });
     }
 
     /**
@@ -490,31 +492,23 @@ public class CurrentUserProfileFragment extends Fragment {
      * Verify OTP API - Xác thực mã OTP
      * TODO: Replace with actual API call when backend is ready
      */
+
     private void verifyOTP(String otpCode) {
-        if (currentUser == null) {
-            Toast.makeText(requireContext(), "User not loaded", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
+        if (currentUser == null || currentUser.email == null) return;
         setLoading(true);
-
-        // TODO: Replace with actual API call:
-        // Example: apiService.verifyOTP(currentUser.email, otpCode).thenAccept(success -> {...})
-        // Simulating API call delay
-        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
-            if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> {
-                    // Simulate successful verification
-                    // In real implementation, check API response
-                    // For now, update local user and refresh
-                    currentUser.isEmailConfirmed = true;
-                    updateProfile(currentUser);
-                    
-                    Toast.makeText(requireContext(), "Email verified successfully!", Toast.LENGTH_SHORT).show();
+        otpService.verifyOtpAsync(currentUser.email, otpCode)
+                .thenAccept(response -> runOnUiThreadSafe(() -> {
+                    Toast.makeText(requireContext(), response.message, Toast.LENGTH_SHORT).show();
+                    if (response.Success) {
+                        currentUser.isEmailConfirmed = true;
+                        updateProfile(currentUser);
+                    }
                     setLoading(false);
-                });
-            }
-        }, 1000);
+                }))
+                .exceptionally(e -> { runOnUiThreadSafe(() -> {
+                    Toast.makeText(requireContext(), "Verify OTP failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    setLoading(false);
+                }); return null; });
     }
 
     /**
@@ -560,4 +554,6 @@ public class CurrentUserProfileFragment extends Fragment {
         cancelOtpTimer();
         binding = null;
     }
+    
+    private void runOnUiThreadSafe(Runnable r) { if (getActivity() != null) getActivity().runOnUiThread(r); }
 }
