@@ -18,6 +18,7 @@ public class HomeFragment extends Fragment {
 
     private MaterialButton btnTestFlashcard;
     private MaterialButton btnQuizDetail;
+    private MaterialButton btnTestAddQuiz;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -36,6 +37,11 @@ public class HomeFragment extends Fragment {
 
         btnTestFlashcard = view.findViewById(R.id.btnTestFlashcard);
         btnQuizDetail = view.findViewById(R.id.btnTestQuizDetail);
+        btnTestAddQuiz = view.findViewById(R.id.btnTestAddQuiz);
+
+        btnTestAddQuiz.setOnClickListener(v->{
+            Navigation.findNavController(v).navigate(R.id.naviagtion_add_quiz);
+        });
 
         btnQuizDetail.setOnClickListener(v -> {
             Bundle args = new Bundle();

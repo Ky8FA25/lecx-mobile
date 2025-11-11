@@ -1,9 +1,27 @@
 <resources>
-    <string name="app_name">lecx-mobile</string>
+    <string name="app_name">LecX</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_home">Home</string>
-    <string name="title_quiz">Quiz</string>
-    <string name="title_flashcard">Flashcard</string>
-    <string name="title_profile">Profile</string>
+    <string name="title_home">Trang chủ</string>
+    <string name="title_quiz_discover">Khám phá</string>
+    <string name="title_flashcard">Thẻ ghi nhớ</string>
+    <string name="title_profile">Cá nhân</string>
+
+    <!-- auth-->
+    <string name="text_email">Tài khoản email</string>
+    <string name="text_full_name">Tên đầy đủ</string>
+    <string name="text_password">Mật khẩu</string>
+    <string name="text_confirm_password">Xác nhận Mật khẩu</string>
+    <string name="text_remember_me">Nhờ mật khẩu</string>
+    <string name="text_welcome_back">Chào mừng trở lại!</string>
+    <string name="login_to_continue">Đăng nhập để tiếp tục</string>
+    <string name="title_create_account">Tạo tài khoản</string>
+    <string name="prompt_sign_up_start">Đăng kí để bắt đầu</string>
+    <string name="text_register">Đăng kí</string>
+    <string name="text_login">Đăng nhập</string>
+    <string name="text_login_google">Tiếp tục với Google</string>
+    <string name="no_account_prompt">Chưa có tài khoản?</string>
+    <string name="have_account_prompt">Đã có tài khoản?</string>
+
+    <string name="default_web_client_id">626840100821-451ssheemrce8j22s1to7tgfeufv292k.apps.googleusercontent.com</string>
 </resources>

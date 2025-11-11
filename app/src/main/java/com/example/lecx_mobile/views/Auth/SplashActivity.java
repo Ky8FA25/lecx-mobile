@@ -3,14 +3,9 @@ package com.example.lecx_mobile.views.Auth;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.lecx_mobile.MainActivity;
-import com.example.lecx_mobile.R;
 import com.example.lecx_mobile.utils.Prefs;
 
 public class SplashActivity extends AppCompatActivity {

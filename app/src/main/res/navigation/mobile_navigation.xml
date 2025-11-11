@@ -14,7 +14,7 @@
     <fragment
         android:id="@+id/navigation_quiz_discover"
         android:name="com.example.lecx_mobile.views.Quiz.QuizDiscoverFragment"
-        android:label="@string/title_quiz"
+        android:label="@string/title_quiz_discover"
         tools:layout="@layout/fragment_quiz_discover" />
 
     <fragment
@@ -45,31 +45,19 @@
             android:defaultValue="1" />
     </fragment>
 
-<!--    <fragment-->
-<!--        android:id="@+id/navigation_products"-->
-<!--        android:name="com.example.onlineshop.view.product.ProductFragment"-->
-<!--        android:label="@string/title_products"-->
-<!--        tools:layout="@layout/fragment_product" />-->
+    <fragment
+        android:id="@+id/naviagtion_add_quiz"
+        android:name="com.example.lecx_mobile.views.Quiz.AddQuizFragment"
+        android:label="Thêm bộ thẻ"
+        tools:layout="@layout/fragment_add_quiz"
+        >
+    </fragment>
 
-<!--    <fragment-->
-<!--        android:id="@+id/navigation_product_detail"-->
-<!--        android:name="com.example.onlineshop.view.product.ProductDetailFragment"-->
-<!--        android:label="Product Detail"-->
-<!--        tools:layout="@layout/fragment_product_detail" >-->
-<!--        <argument-->
-<!--            android:name="productId"-->
-<!--            app:argType="integer" />-->
-<!--    </fragment>-->
-
-<!--    <fragment-->
-<!--        android:id="@+id/navigation_dashboard"-->
-<!--        android:name="com.example.onlineshop.view.dashboard.DashboardFragment"-->
-<!--        android:label="@string/title_dashboard"-->
-<!--        tools:layout="@layout/fragment_dashboard" />-->
-
-<!--    <fragment-->
-<!--        android:id="@+id/navigation_notifications"-->
-<!--        android:name="com.example.onlineshop.view.notifications.NotificationsFragment"-->
-<!--        android:label="@string/title_notifications"-->
-<!--        tools:layout="@layout/fragment_notifications" />-->
+    <fragment
+        android:id="@+id/navigation_update_quiz"
+        android:name="com.example.lecx_mobile.views.Quiz.UpdateQuizFragment"
+        android:label="Sửa bộ thẻ"
+        tools:layout="@layout/fragment_update_quiz"
+        >
+    </fragment>
 </navigation>
