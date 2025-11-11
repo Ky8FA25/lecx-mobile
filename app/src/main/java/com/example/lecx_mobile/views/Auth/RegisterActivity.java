@@ -1,4 +1,4 @@
-package com.example.lecx_mobile.views.auth;
+package com.example.lecx_mobile.views.Auth;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,11 +6,16 @@ import android.text.TextUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.lecx_mobile.MainActivity;
 import com.example.lecx_mobile.R;
 import com.example.lecx_mobile.models.Account;
 import com.example.lecx_mobile.repositories.implementations.AccountRepository;
 import com.example.lecx_mobile.repositories.interfaces.IAccountRepository;
+import com.example.lecx_mobile.services.implementations.GoogleAuthService;
 import com.example.lecx_mobile.utils.Constants;
+import com.example.lecx_mobile.utils.Prefs;
+import com.example.lecx_mobile.views.Auth.Components.GoogleLoginButton;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -19,6 +24,8 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText etFullName, etEmail, etPassword, etConfirmPassword;
     private MaterialButton btnSignUp;
     private TextView tvLogin;
+    private GoogleLoginButton googleLogin;
+    private static final int GOOGLE_SIGN_IN_CODE = 1001;
 
     // Khởi tạo Repository theo yêu cầu
     private final IAccountRepository repo = new AccountRepository();
@@ -30,6 +37,34 @@ public class RegisterActivity extends AppCompatActivity {
 
         initViews();
         setupListeners();
+
+        MaterialButton btnGoogleLogin = findViewById(R.id.btnGoogleLogin);
+        GoogleAuthService googleService = new GoogleAuthService(this);
+
+        googleLogin = new GoogleLoginButton(this, btnGoogleLogin, googleService, GOOGLE_SIGN_IN_CODE);
+        googleLogin.setOnLoginListener(new GoogleLoginButton.OnLoginListener() {
+            @Override
+            public void onSuccess(Account account) {
+                // 1. Lưu session
+                Prefs.saveSession(RegisterActivity.this, account.id, account.email, true);
+
+                // 2. Thông báo
+                Toast.makeText(RegisterActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+
+                // 3. Chuyển sang MainActivity
+                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+
+                // 4. Kết thúc LoginActivity
+                finish();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(RegisterActivity.this, "Đăng nhập thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void initViews() {
@@ -57,30 +92,30 @@ public class RegisterActivity extends AppCompatActivity {
         String confirmPassword = etConfirmPassword.getText().toString().trim();
 
         // Validate đầu vào
-        if (TextUtils.isEmpty(fullName)) { etFullName.setError("Full name is required"); etFullName.requestFocus(); return; }
-        if (TextUtils.isEmpty(email)) { etEmail.setError("Email is required"); etEmail.requestFocus(); return; }
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) { etEmail.setError("Please enter a valid email"); etEmail.requestFocus(); return; }
-        if (TextUtils.isEmpty(password)) { etPassword.setError("Password is required"); etPassword.requestFocus(); return; }
-        if (password.length() < 6) { etPassword.setError("Password must be at least 6 characters"); etPassword.requestFocus(); return; }
-        if (TextUtils.isEmpty(confirmPassword)) { etConfirmPassword.setError("Please confirm your password"); etConfirmPassword.requestFocus(); return; }
-        if (!password.equals(confirmPassword)) { etConfirmPassword.setError("Passwords do not match"); etConfirmPassword.requestFocus(); return; }
+        if (TextUtils.isEmpty(fullName)) { etFullName.setError("Vui lòng nhập tên"); etFullName.requestFocus(); return; }
+        if (TextUtils.isEmpty(email)) { etEmail.setError("Vui lòng nhập email"); etEmail.requestFocus(); return; }
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) { etEmail.setError("Vui lòng nhập email hợp lệ"); etEmail.requestFocus(); return; }
+        if (TextUtils.isEmpty(password)) { etPassword.setError("Vui lòng nhập mật khẩu"); etPassword.requestFocus(); return; }
+        if (password.length() < 6) { etPassword.setError("Mật khẩu ít nhất 6 kí tự"); etPassword.requestFocus(); return; }
+        if (TextUtils.isEmpty(confirmPassword)) { etConfirmPassword.setError("Vui lòng xác nhập mật khẩu"); etConfirmPassword.requestFocus(); return; }
+        if (!password.equals(confirmPassword)) { etConfirmPassword.setError("Mật khẩu không khớp"); etConfirmPassword.requestFocus(); return; }
 
         performSignUp(fullName, email, password);
     }
 
     private void performSignUp(String fullName, String email, String password) {
         btnSignUp.setEnabled(false);
-        btnSignUp.setText("Creating account...");
+        btnSignUp.setText("Đang tạo...");
 
         // BƯỚC 1: Kiểm tra Email đã tồn tại chưa
-        repo.existsByEmailAsync(email)
+        repo.existsByEmail(email)
                 .thenAccept(exists -> {
                     if (exists) {
                         // Cập nhật UI trên Main Thread
                         runOnUiThread(() -> {
                             btnSignUp.setEnabled(true);
-                            btnSignUp.setText("Sign Up");
-                            Toast.makeText(this, "Email already registered", Toast.LENGTH_SHORT).show();
+                            btnSignUp.setText("Đăng kí");
+                            Toast.makeText(this, "Email đã có người sử dụng", Toast.LENGTH_SHORT).show();
                         });
                         return;
                     }
@@ -98,8 +133,8 @@ public class RegisterActivity extends AppCompatActivity {
                                 // Cập nhật UI trên Main Thread (Đăng ký thành công)
                                 runOnUiThread(() -> {
                                     btnSignUp.setEnabled(true);
-                                    btnSignUp.setText("Sign Up");
-                                    Toast.makeText(this, "Account created successfully!", Toast.LENGTH_SHORT).show();
+                                    btnSignUp.setText("Đăng kí");
+                                    Toast.makeText(this, "Đã tạo tài khoản!", Toast.LENGTH_SHORT).show();
 
                                     // Chuyển sang trang Login
                                     Intent intent = new Intent(this, LoginActivity.class);
@@ -112,8 +147,8 @@ public class RegisterActivity extends AppCompatActivity {
                                 // Xử lý lỗi khi thêm User
                                 runOnUiThread(() -> {
                                     btnSignUp.setEnabled(true);
-                                    btnSignUp.setText("Sign Up");
-                                    Toast.makeText(this, "Registration failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    btnSignUp.setText("Đăng kí");
+                                    Toast.makeText(this, "Đăng kí thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 });
                                 return null;
                             });
@@ -122,10 +157,18 @@ public class RegisterActivity extends AppCompatActivity {
                     // Xử lý lỗi kiểm tra tồn tại email
                     runOnUiThread(() -> {
                         btnSignUp.setEnabled(true);
-                        btnSignUp.setText("Sign Up");
-                        Toast.makeText(this, "Error checking email existence: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        btnSignUp.setText("Đăng kí");
+                        Toast.makeText(this, "Lỗi xác thực email: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
                     return null;
                 });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GOOGLE_SIGN_IN_CODE) {
+            googleLogin.handleActivityResult(data);
+        }
     }
 }

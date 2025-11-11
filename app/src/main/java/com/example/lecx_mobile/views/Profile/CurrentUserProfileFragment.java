@@ -1,4 +1,4 @@
-package com.example.lecx_mobile.views.profile;
+package com.example.lecx_mobile.views.Profile;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,7 +18,7 @@ import com.example.lecx_mobile.repositories.implementations.AccountRepository;
 import com.example.lecx_mobile.repositories.interfaces.IAccountRepository;
 import com.example.lecx_mobile.utils.Prefs;
 import com.example.lecx_mobile.databinding.FragmentProfileCurrentUserBinding;
-import com.example.lecx_mobile.views.auth.LoginActivity;
+import com.example.lecx_mobile.views.Auth.LoginActivity;
 
 public class CurrentUserProfileFragment extends Fragment {
 
@@ -102,7 +102,7 @@ public class CurrentUserProfileFragment extends Fragment {
 
     private void handleLogout() {
         Prefs.clearSession(requireContext());
-        Toast.makeText(requireContext(), "Logout successful", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "Đã đăng xuất", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(requireContext(), LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

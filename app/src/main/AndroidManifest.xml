@@ -15,15 +15,15 @@
         android:theme="@style/Theme.MyApp">
 
         <activity
-            android:name=".views.auth.RegisterActivity"
+            android:name=".views.Auth.RegisterActivity"
             android:exported="false" />
 
         <activity
-            android:name=".views.auth.LoginActivity"
+            android:name=".views.Auth.LoginActivity"
             android:exported="false" />
 
         <activity
-            android:name=".views.auth.SplashActivity"
+            android:name=".views.Auth.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
