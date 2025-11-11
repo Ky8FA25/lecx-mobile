@@ -1,6 +1,7 @@
 package com.example.lecx_mobile;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,14 +33,14 @@ public class MainActivity extends AppCompatActivity {
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(navView, navController);
 
-        // 👇 Ẩn bottom nav khi vào Product Detail
-//        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-//            if (destination.getId() == R.id.navigation_product_detail) {
-//                navView.setVisibility(View.GONE);
-//            } else {
-//                navView.setVisibility(View.VISIBLE);
-//            }
-//        });
+        // 👇 Ẩn bottom nav khi vào Flashcard Learning
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            if (destination.getId() == R.id.navigation_flashcard_learning) {
+                navView.setVisibility(View.GONE);
+            } else {
+                navView.setVisibility(View.VISIBLE);
+            }
+        });
 
         // 👇 Bắt nút Back để xử lý custom
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
