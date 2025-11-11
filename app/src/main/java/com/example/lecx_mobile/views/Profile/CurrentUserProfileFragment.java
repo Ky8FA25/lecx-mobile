@@ -1,4 +1,4 @@
-package com.example.lecx_mobile.views.Profile;
+package com.example.lecx_mobile.views.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,7 +18,7 @@ import com.example.lecx_mobile.repositories.implementations.AccountRepository;
 import com.example.lecx_mobile.repositories.interfaces.IAccountRepository;
 import com.example.lecx_mobile.utils.Prefs;
 import com.example.lecx_mobile.databinding.FragmentProfileCurrentUserBinding;
-import com.example.lecx_mobile.views.Auth.LoginActivity;
+import com.example.lecx_mobile.views.auth.LoginActivity;
 
 public class CurrentUserProfileFragment extends Fragment {
 
