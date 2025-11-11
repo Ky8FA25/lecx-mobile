@@ -61,4 +61,15 @@
         tools:layout="@layout/fragment_update_quiz"
         >
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_profile_other_user"
+        android:name="com.example.lecx_mobile.views.Profile.OtherUserProfileFragment"
+        android:label="Thông tin người dùng"
+        tools:layout="@layout/fragment_profile_other_user">
+        <argument
+            android:name="accountId"
+            app:argType="integer"
+            android:defaultValue="1" />
+    </fragment>
 </navigation>
