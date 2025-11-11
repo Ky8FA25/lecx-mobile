@@ -1,5 +1,6 @@
 package com.example.lecx_mobile.views.Quiz;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,17 +20,23 @@ import com.example.lecx_mobile.databinding.FragmentQuizDetailBinding;
 import com.example.lecx_mobile.models.Account;
 import com.example.lecx_mobile.models.Flashcard;
 import com.example.lecx_mobile.models.Quiz;
+import com.example.lecx_mobile.models.QuizLearning;
 import com.example.lecx_mobile.repositories.implementations.AccountRepository;
 import com.example.lecx_mobile.repositories.implementations.FlashcardRepository;
+import com.example.lecx_mobile.repositories.implementations.QuizLearningRepository;
 import com.example.lecx_mobile.repositories.implementations.QuizRepository;
 import com.example.lecx_mobile.repositories.interfaces.IAccountRepository;
 import com.example.lecx_mobile.repositories.interfaces.IFlashcardRepository;
+import com.example.lecx_mobile.repositories.interfaces.IQuizLearningRepository;
 import com.example.lecx_mobile.repositories.interfaces.IQuizRepository;
 import com.example.lecx_mobile.utils.Constants;
 import com.example.lecx_mobile.utils.Prefs;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Fragment hiển thị chi tiết một Quiz cụ thể
@@ -44,6 +52,7 @@ public class QuizDetailFragment extends Fragment {
 
     // Repositories
     private final IQuizRepository quizRepository = new QuizRepository();
+    private final IQuizLearningRepository quizLearningRepository = new QuizLearningRepository();
     private final IAccountRepository accountRepository = new AccountRepository();
     private final IFlashcardRepository flashcardRepository = new FlashcardRepository();
 
@@ -376,19 +385,54 @@ public class QuizDetailFragment extends Fragment {
             }
         });
 
-        // Nút HỌC (để trống logic tạm thời)
+        // Nút HỌC - Mở DoQuizActivity
         binding.btnStudy.setOnClickListener(v -> {
-            // TODO: Xử lý logic học quiz
+            Intent intent = new Intent(requireContext(), DoQuizActivity.class);
+            intent.putExtra(DoQuizActivity.EXTRA_QUIZ_ID, quiz.id);
+            startActivity(intent);
         });
 
-        // Nút THẺ GHI NHỚ (để trống logic tạm thời)
         binding.btnFlashcard.setOnClickListener(v -> {
-            // TODO: Xử lý logic thẻ ghi nhớ
+
+            getLatestQuizLearningId()
+                    .thenCompose(latestId -> {
+                        // Nếu chưa có bản ghi học -> tạo mới
+                        if (latestId == -1) {
+                            return createNewQuizLearning();
+                        } else {
+                            // Trả về bản ghi cũ
+                            return CompletableFuture.completedFuture(latestId);
+                        }
+                    })
+                    .thenAccept(quizLearningId -> {
+                        if (getActivity() == null) return;
+
+                        getActivity().runOnUiThread(() -> {
+
+                            Bundle args = new Bundle();
+                            args.putInt("quizLearningId", quizLearningId);
+                            Navigation.findNavController(v)
+                                    .navigate(R.id.navigation_flashcard_learning, args);
+                        });
+                    })
+                    .exceptionally(e -> {
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                Toast.makeText(requireContext(),
+                                        "Lỗi khi khởi tạo tiến trình học: " + e.getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                            });
+                        }
+                        return null;
+                    });
         });
+
 
         // Nút Sửa (để trống logic tạm thời)
         binding.btnEdit.setOnClickListener(v -> {
-            // TODO: Xử lý logic sửa quiz
+            Bundle args = new Bundle();
+            args.putInt("quizId",1);
+            Navigation.findNavController(v).navigate(R.id.navigation_update_quiz, args);
         });
 
         // Click vào tác giả (để trống logic tạm thời)
@@ -396,7 +440,58 @@ public class QuizDetailFragment extends Fragment {
             // TODO: Xử lý logic xem profile tác giả
         });
     }
+    private CompletableFuture<Integer> getLatestQuizLearningId() {
+        QuizLearningRepository repo = new QuizLearningRepository();
+        int accountId = Prefs.getUserId(requireContext());
+        CompletableFuture<Integer> future = new CompletableFuture<>();
 
+        repo.getAll().thenAccept(list -> {
+            // lọc theo quizId, accountId và status=false
+            Optional<QuizLearning> latest = list.stream()
+                    .filter(q -> q.quizId == quiz.id && q.accountId == accountId && !q.status)
+                    .max(Comparator.comparingInt(q -> q.id)); // lấy bản ghi có id lớn nhất
+
+            if (latest.isPresent()) {
+                future.complete(latest.get().id);
+            } else {
+                future.complete(-1);
+            }
+        }).exceptionally(e -> {
+            future.completeExceptionally(e);
+            return null;
+        });
+
+        return future;
+    }
+
+    private CompletableFuture<Integer> createNewQuizLearning() {
+        QuizLearningRepository repo = new QuizLearningRepository();
+        int accountId = Prefs.getUserId(requireContext());
+        CompletableFuture<Integer> future = new CompletableFuture<>();
+
+        QuizLearning newLearning = new QuizLearning(
+                quiz.id,
+                accountId,
+                "",      // learnedFlashCard
+                0,       // learningFlashcardId
+                false    // status
+        );
+
+        repo.add(newLearning)
+                .thenAccept(saved -> {
+                    if (saved != null) {
+                        future.complete(saved.id);
+                    } else {
+                        future.complete(-1);
+                    }
+                })
+                .exceptionally(e -> {
+                    future.completeExceptionally(e);
+                    return null;
+                });
+
+        return future;
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

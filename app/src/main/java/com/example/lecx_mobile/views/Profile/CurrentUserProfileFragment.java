@@ -168,7 +168,7 @@ public class CurrentUserProfileFragment extends Fragment {
 
     private void handleLogout() {
         Prefs.clearSession(requireContext());
-        Toast.makeText(requireContext(), "Logout successful", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "Đã đăng xuất", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(requireContext(), LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
