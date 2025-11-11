@@ -1,4 +1,4 @@
-package com.example.lecx_mobile.views.Quiz;
+package com.example.lecx_mobile.views.quiz;
 
 import android.os.Bundle;
 

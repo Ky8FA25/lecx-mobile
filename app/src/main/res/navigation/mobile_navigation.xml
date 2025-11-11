@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.lecx_mobile.views.Home.HomeFragment"
+        android:name="com.example.lecx_mobile.views.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_quiz_discover"
-        android:name="com.example.lecx_mobile.views.Quiz.QuizDiscoverFragment"
-        android:label="@string/title_quiz"
+        android:name="com.example.lecx_mobile.views.quiz.QuizDiscoverFragment"
+        android:label="@string/title_quiz_discover"
         tools:layout="@layout/fragment_quiz_discover" />
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.example.lecx_mobile.views.Profile.CurrentUserProfileFragment"
+        android:name="com.example.lecx_mobile.views.profile.CurrentUserProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile_current_user" />
 

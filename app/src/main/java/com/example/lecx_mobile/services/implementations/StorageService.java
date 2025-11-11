@@ -1,12 +1,12 @@
-package com.example.lecx_mobile.repositories.implementations;
+package com.example.lecx_mobile.services.implementations;
 
 import android.net.Uri;
 
-import com.example.lecx_mobile.repositories.interfaces.IStorageRepository;
+import com.example.lecx_mobile.services.interfaces.IStorageService;
 import com.example.lecx_mobile.utils.FirebaseStorageUtils;
 import com.google.android.gms.tasks.Task;
 
-public class StorageRepository implements IStorageRepository {
+public class StorageService implements IStorageService {
 
     @Override
     public Task<String> uploadAvatar(Uri fileUri, String fileName) {
