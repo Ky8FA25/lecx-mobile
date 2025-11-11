@@ -30,6 +30,7 @@ public class GoogleAuthService implements IGoogleAuthService {
         activity.startActivityForResult(intent, requestCode);
     }
 
+    @Override
     public void handleSignInResult(Intent data, OnAuthCompleteListener listener) {
         try {
             String idToken = GoogleAuthUtils.getIdTokenFromIntent(data);
