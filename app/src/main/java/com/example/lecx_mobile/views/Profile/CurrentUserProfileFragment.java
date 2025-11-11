@@ -18,7 +18,7 @@ import com.example.lecx_mobile.repositories.implementations.AccountRepository;
 import com.example.lecx_mobile.repositories.interfaces.IAccountRepository;
 import com.example.lecx_mobile.utils.Prefs;
 import com.example.lecx_mobile.databinding.FragmentProfileCurrentUserBinding;
-import com.example.lecx_mobile.views.auth.LoginActivity;
+import com.example.lecx_mobile.views.Auth.LoginActivity;
 
 public class CurrentUserProfileFragment extends Fragment {
 
