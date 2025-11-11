@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -388,7 +389,9 @@ public class QuizDetailFragment extends Fragment {
 
         // Nút Sửa (để trống logic tạm thời)
         binding.btnEdit.setOnClickListener(v -> {
-            // TODO: Xử lý logic sửa quiz
+            Bundle args = new Bundle();
+            args.putInt("quizId",1);
+            Navigation.findNavController(v).navigate(R.id.navigation_update_quiz, args);
         });
 
         // Click vào tác giả (để trống logic tạm thời)

@@ -258,7 +258,7 @@ public class GenericRepository<T> implements IGenericRepository<T> {
     private Field getEntityIdField(T entity) {
         for (Field field : entity.getClass().getFields()) {
             String name = field.getName().toLowerCase();
-            if (name.endsWith("id")) {
+            if (name.equals("id")) {
                 field.setAccessible(true);
                 return field;
             }
