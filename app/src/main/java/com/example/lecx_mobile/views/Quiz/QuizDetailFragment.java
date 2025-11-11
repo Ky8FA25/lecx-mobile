@@ -1,5 +1,6 @@
 package com.example.lecx_mobile.views.Quiz;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -376,9 +377,11 @@ public class QuizDetailFragment extends Fragment {
             }
         });
 
-        // Nút HỌC (để trống logic tạm thời)
+        // Nút HỌC - Mở DoQuizActivity
         binding.btnStudy.setOnClickListener(v -> {
-            // TODO: Xử lý logic học quiz
+            Intent intent = new Intent(requireContext(), DoQuizActivity.class);
+            intent.putExtra(DoQuizActivity.EXTRA_QUIZ_ID, quiz.id);
+            startActivity(intent);
         });
 
         // Nút THẺ GHI NHỚ (để trống logic tạm thời)

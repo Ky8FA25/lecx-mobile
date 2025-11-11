@@ -55,4 +55,12 @@ public final class Constants {
     public static final String ORDER_BY_NAME_DESC  = "name_desc";
     public static final String ORDER_BY_DATE_ASC   = "date_asc";
     public static final String ORDER_BY_DATE_DESC  = "date_desc";
+
+    // =======================================================
+    // 🤖 GEMINI API
+    // =======================================================
+
+    // TODO: Thay thế bằng API key thực tế của bạn
+    // Hoặc đọc từ BuildConfig hoặc local.properties
+    public static final String GEMINI_API_KEY = "AIzaSyBqTg19dWTEiFVQtswu0U63sq-ftZ1Fbzw"; // Để trống nếu chưa có key
 }
