@@ -40,16 +40,16 @@
                         android:textStyle="bold"
                         android:textColor="#333333" />
 
-                    <TextView
-                        android:id="@+id/tvSeeAllLearning"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Xem tất cả"
-                        android:textSize="14sp"
-                        android:textColor="#1976D2"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:padding="8dp" />
+                    <ImageButton
+                        android:id="@+id/btnToggleViewLearning"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_view_list"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Chuyển đổi chế độ xem"
+                        android:tint="@color/primary"
+                        android:padding="8dp"
+                        android:scaleType="fitCenter" />
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView

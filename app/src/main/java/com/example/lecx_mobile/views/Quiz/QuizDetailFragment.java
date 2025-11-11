@@ -428,10 +428,9 @@ public class QuizDetailFragment extends Fragment {
         });
 
 
-        // Nút Sửa (để trống logic tạm thời)
         binding.btnEdit.setOnClickListener(v -> {
             Bundle args = new Bundle();
-            args.putInt("quizId",1);
+            args.putInt("quizId", quiz.id);
             Navigation.findNavController(v).navigate(R.id.navigation_update_quiz, args);
         });
 
@@ -472,9 +471,9 @@ public class QuizDetailFragment extends Fragment {
         QuizLearning newLearning = new QuizLearning(
                 quiz.id,
                 accountId,
-                "",      // learnedFlashCard
-                0,       // learningFlashcardId
-                false    // status
+                "",
+                0,
+                false
         );
 
         repo.add(newLearning)
