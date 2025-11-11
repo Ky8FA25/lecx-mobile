@@ -22,11 +22,14 @@ public class QuizRepository
             return getAll();
         }
 
-        // Tạo predicate cho từng field cần search
-        Predicate<Quiz> namePredicate = PredicateUtils.containsPredicate("name", keyword);
+        // Tạo predicate cho từng field cần search (dùng OR logic)
+        Predicate<Quiz> titlePredicate = PredicateUtils.containsPredicate("title", keyword);
         Predicate<Quiz> descriptionPredicate = PredicateUtils.containsPredicate("description", keyword);
 
-        // Gọi hàm where với các predicate
-        return where(namePredicate, descriptionPredicate);
+        // Kết hợp với OR logic: title chứa keyword HOẶC description chứa keyword
+        Predicate<Quiz> combinedPredicate = titlePredicate.or(descriptionPredicate);
+
+        // Gọi hàm where với predicate đã kết hợp
+        return where(combinedPredicate);
     }
 }

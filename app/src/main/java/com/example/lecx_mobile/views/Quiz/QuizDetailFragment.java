@@ -434,9 +434,15 @@ public class QuizDetailFragment extends Fragment {
             Navigation.findNavController(v).navigate(R.id.navigation_update_quiz, args);
         });
 
-        // Click vào tác giả (để trống logic tạm thời)
+        // Click vào tác giả - Navigate đến profile của tác giả
         binding.layoutAuthor.setOnClickListener(v -> {
-            // TODO: Xử lý logic xem profile tác giả
+            if (author != null && author.id > 0) {
+                Bundle args = new Bundle();
+                args.putInt("accountId", author.id);
+                Navigation.findNavController(v).navigate(R.id.navigation_profile_other_user, args);
+            } else {
+                Toast.makeText(requireContext(), "Không tìm thấy thông tin tác giả", Toast.LENGTH_SHORT).show();
+            }
         });
     }
     private CompletableFuture<Integer> getLatestQuizLearningId() {
