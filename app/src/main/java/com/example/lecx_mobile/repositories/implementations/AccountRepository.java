@@ -21,7 +21,7 @@ public class AccountRepository
     }
 
     @Override
-    public CompletableFuture<Boolean> existsByEmailAsync(String email) {
+    public CompletableFuture<Boolean> existsByEmail(String email) {
         return exists(account ->
                 account.email.equalsIgnoreCase(email)
         );

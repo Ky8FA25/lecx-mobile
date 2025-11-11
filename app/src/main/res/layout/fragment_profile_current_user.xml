@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:background="#F5F5F5"
-    tools:context=".views.profile.CurrentUserProfileFragment">
+    tools:context=".views.Profile.CurrentUserProfileFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -103,7 +103,7 @@
                 android:id="@+id/btnLogout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Logout"
+                android:text="Đăng xuất"
                 android:textStyle="bold"
                 android:textColor="#D32F2F"
                 android:backgroundTint="@android:color/white"
