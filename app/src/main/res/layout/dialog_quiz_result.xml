@@ -9,23 +9,13 @@
     android:background="@drawable/dialog_result_background">
 
     <!-- Celebratory Graphic -->
-    <FrameLayout
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginBottom="24dp">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/celebration_circle_background" />
-
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_profile"
-            android:scaleType="centerCrop" />
-    </FrameLayout>
+    <ImageView
+        android:id="@+id/ivCelebrationGif"
+        android:layout_width="280dp"
+        android:layout_height="280dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="24dp"
+        android:scaleType="fitCenter" />
 
     <!-- Score Display -->
     <TextView
