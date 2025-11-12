@@ -75,3 +75,27 @@ lint/tmp/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Android build
+/build/
+/app/build/
+
+# Keystore
+*.jks
+
+# IDE files
+/.idea/
+/*.iml
+/local.properties
+
+# Logs and output
+*.log
+*.apk
+*.aab
+
+# Lint & Proguard mapping
+/app/build/outputs/mapping/
+
+# Android Studio build metadata
+*.dm
+output-metadata.json
