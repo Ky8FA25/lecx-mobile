@@ -12,10 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,12 +55,16 @@ public class CurrentUserProfileFragment extends Fragment {
     // OTP Timer
     private CountDownTimer otpTimer;
     private static final long OTP_RESEND_INTERVAL = 60000; // 60 seconds
+    private long otpEndTime = 0;
+    private View loadingOverlay; // Loading overlay view
+
     private IOtpService otpService;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Tên binding cần khớp với tên file layout của bạn (fragment_profile.xml)
         binding = FragmentProfileCurrentUserBinding.inflate(inflater, container, false);
+        loadingOverlay = binding.getRoot().findViewById(R.id.loadingOverlay);
 
         Retrofit retrofit = ApiClient.getClient(getString(R.string.base_url));
         otpService = new OtpService(retrofit);
@@ -150,7 +156,6 @@ public class CurrentUserProfileFragment extends Fragment {
 
         // Update header section
         binding.tvFullName.setText(user.fullname);
-        binding.tvUsername.setText("@" + (user.username != null ? user.username : ""));
         binding.tvEmail.setText(user.email);
 
         // Update edit section
@@ -167,13 +172,22 @@ public class CurrentUserProfileFragment extends Fragment {
     }
 
     private void setLoading(boolean loading) {
-        binding.btnLogout.setEnabled(!loading);
-        binding.btnEditFullName.setEnabled(!loading);
-        binding.btnEditUsername.setEnabled(!loading);
-        binding.btnChangePassword.setEnabled(!loading);
-        binding.fabEditAvatar.setEnabled(!loading);
-        binding.btnVerifyEmail.setEnabled(!loading);
-        // Có thể thêm logic ẩn/hiện ProgressBar ở đây
+
+        if (binding != null && getActivity() != null) {
+            getActivity().runOnUiThread(() -> {
+                // Hiển thị/ẩn loading overlay
+                if (loadingOverlay != null) {
+                    loadingOverlay.setVisibility(loading ? View.VISIBLE : View.GONE);
+                }
+
+                binding.btnLogout.setEnabled(!loading);
+                binding.btnEditFullName.setEnabled(!loading);
+                binding.btnEditUsername.setEnabled(!loading);
+                binding.btnChangePassword.setEnabled(!loading);
+                binding.fabEditAvatar.setEnabled(!loading);
+                binding.btnVerifyEmail.setEnabled(!loading);
+            });
+        }
     }
 
     private void handleLogout() {
@@ -224,11 +238,18 @@ public class CurrentUserProfileFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Sửa tên");
 
+        LinearLayout container = new LinearLayout(requireContext());
+        container.setOrientation(LinearLayout.VERTICAL);
+        int padding = (int) (16 * getResources().getDisplayMetrics().density); // 16dp
+        container.setPadding(padding, 0, padding, 0);
+
         final EditText input = new EditText(requireContext());
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         input.setText(currentUser.fullname);
         input.setHint("Điền tên");
-        builder.setView(input);
+
+        container.addView(input);
+        builder.setView(container);
 
         builder.setPositiveButton("Lưu", (dialog, which) -> {
             String newFullName = input.getText().toString().trim();
@@ -250,11 +271,18 @@ public class CurrentUserProfileFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Sửa Username");
 
+        LinearLayout container = new LinearLayout(requireContext());
+        container.setOrientation(LinearLayout.VERTICAL);
+        int padding = (int) (16 * getResources().getDisplayMetrics().density); // 16dp
+        container.setPadding(padding, 0, padding, 0);
+
         final EditText input = new EditText(requireContext());
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         input.setText(currentUser.username);
         input.setHint("Điền username");
-        builder.setView(input);
+
+        container.addView(input);
+        builder.setView(container);
 
         builder.setPositiveButton("Lưu", (dialog, which) -> {
             String newUsername = input.getText().toString().trim();
@@ -403,6 +431,13 @@ public class CurrentUserProfileFragment extends Fragment {
             Toast.makeText(requireContext(), "Email đã xác minh", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        if (otpTimer != null) {
+            // Chỉ mở lại dialog nhập OTP thôi, không gọi API sendOTP nữa
+            showVerifyOtpDialog();
+            return;
+        }
+
         sendOTP(currentUser.email);
     }
 
@@ -478,9 +513,8 @@ public class CurrentUserProfileFragment extends Fragment {
                     return;
                 }
 
-                dialog.dismiss();
-                cancelOtpTimer();
-                verifyOTP(otpCode);
+//                cancelOtpTimer();
+                verifyOTP(dialog, otpCode);
             });
         });
 
@@ -493,16 +527,27 @@ public class CurrentUserProfileFragment extends Fragment {
      * TODO: Replace with actual API call when backend is ready
      */
 
-    private void verifyOTP(String otpCode) {
+    private void verifyOTP(AlertDialog dialog, String otpCode) {
         if (currentUser == null || currentUser.email == null) return;
         setLoading(true);
         otpService.verifyOtpAsync(currentUser.email, otpCode)
                 .thenAccept(response -> runOnUiThreadSafe(() -> {
+                    Log.d("OTP_RESPONSE", "Success = " + response.success + ", Message = " + response.message);
                     Toast.makeText(requireContext(), response.message, Toast.LENGTH_SHORT).show();
-                    if (response.Success) {
+
+                    if (response.success) {
                         currentUser.isEmailConfirmed = true;
-                        updateProfile(currentUser);
+                        userRepo.update(currentUser);
+                        Log.d("OTP_RESPONSE", "✅ User updated");
+                        if (dialog != null && dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+                        cancelOtpTimer();
+                        refreshProfile(); // 🔄 Gọi hàm refresh
+                    } else {
+                        Log.d("OTP_RESPONSE", "❌ Response not success");
                     }
+
                     setLoading(false);
                 }))
                 .exceptionally(e -> { runOnUiThreadSafe(() -> {
@@ -511,16 +556,25 @@ public class CurrentUserProfileFragment extends Fragment {
                 }); return null; });
     }
 
-    /**
-     * Start OTP resend timer
-     */
     private void startOtpTimer(TextView tvResendOtp, TextView tvOtpTimer) {
-        cancelOtpTimer(); // Cancel existing timer if any
+        long currentTime = System.currentTimeMillis();
+        if (otpEndTime == 0 || currentTime >= otpEndTime) {
+            // set thời điểm kết thúc mới
+            otpEndTime = currentTime + OTP_RESEND_INTERVAL;
+        }
+
+        long timeLeft = otpEndTime - currentTime;
+        if (timeLeft <= 0) {
+            tvOtpTimer.setText("");
+            tvResendOtp.setEnabled(true);
+            tvResendOtp.setAlpha(1.0f);
+            return;
+        }
 
         tvResendOtp.setEnabled(false);
         tvResendOtp.setAlpha(0.5f);
 
-        otpTimer = new CountDownTimer(OTP_RESEND_INTERVAL, 1000) {
+        otpTimer = new CountDownTimer(timeLeft, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 long seconds = millisUntilFinished / 1000;
@@ -532,15 +586,13 @@ public class CurrentUserProfileFragment extends Fragment {
                 tvOtpTimer.setText("");
                 tvResendOtp.setEnabled(true);
                 tvResendOtp.setAlpha(1.0f);
+                otpEndTime = 0; // reset để lần sau bắt đầu từ 60s
             }
         };
 
         otpTimer.start();
     }
 
-    /**
-     * Cancel OTP timer
-     */
     private void cancelOtpTimer() {
         if (otpTimer != null) {
             otpTimer.cancel();
@@ -553,6 +605,11 @@ public class CurrentUserProfileFragment extends Fragment {
         super.onDestroyView();
         cancelOtpTimer();
         binding = null;
+    }
+
+    private void refreshProfile() {
+        int userId = Prefs.getUserId(requireContext());
+        getProfile(userId);
     }
     
     private void runOnUiThreadSafe(Runnable r) { if (getActivity() != null) getActivity().runOnUiThread(r); }

@@ -25,4 +25,5 @@
 
     <string name="default_web_client_id">626840100821-451ssheemrce8j22s1to7tgfeufv292k.apps.googleusercontent.com</string>
     <string name="base_url">https://lec-x-api-287649466967.asia-southeast1.run.app/</string>
+<!--    <string name="base_url">http://10.0.2.2:5272//</string>-->
 </resources>
