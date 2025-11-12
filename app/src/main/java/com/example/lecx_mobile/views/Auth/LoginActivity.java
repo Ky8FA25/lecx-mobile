@@ -2,6 +2,7 @@ package com.example.lecx_mobile.views.Auth;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,8 +28,10 @@ public class LoginActivity extends AppCompatActivity {
     private MaterialButton btnLogin;
     private TextView tvSignUp;
     private MaterialCheckBox cbRemember;
+    private MaterialButton btnGoogleLogin;
     private GoogleLoginButton googleLogin;
     private static final int GOOGLE_SIGN_IN_CODE = 1001;
+    private View loadingOverlay;
 
     // Khởi tạo Repository theo yêu cầu
     private final IAccountRepository repo = new AccountRepository();
@@ -37,12 +40,14 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth_login);
+        loadingOverlay = findViewById(R.id.loadingOverlay);
 
         etEmail     = findViewById(R.id.etEmail);
         etPassword  = findViewById(R.id.etPassword);
         btnLogin    = findViewById(R.id.btnLogin);
         tvSignUp    = findViewById(R.id.tvSignUp);
         cbRemember  = findViewById(R.id.cbRemember);
+        btnGoogleLogin = findViewById(R.id.btnGoogleLogin);
 
         btnLogin.setOnClickListener(v -> handleLogin());
         tvSignUp.setOnClickListener(v -> {
@@ -50,13 +55,13 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         });
 
-        MaterialButton btnGoogleLogin = findViewById(R.id.btnGoogleLogin);
         GoogleAuthService googleService = new GoogleAuthService(this);
 
         googleLogin = new GoogleLoginButton(this, btnGoogleLogin, googleService, GOOGLE_SIGN_IN_CODE);
         googleLogin.setOnLoginListener(new GoogleLoginButton.OnLoginListener() {
             @Override
             public void onSuccess(Account account) {
+                setLoading(true);
                 // 1. Lưu session
                 boolean remember = cbRemember != null && cbRemember.isChecked();
                 Prefs.saveSession(LoginActivity.this, account.id, account.email, remember);
@@ -75,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Exception e) {
+                setLoading(false);
                 Toast.makeText(LoginActivity.this, "Đăng nhập thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -95,10 +101,11 @@ public class LoginActivity extends AppCompatActivity {
                 .thenAccept(user -> {
                     // Cập nhật UI trên Main Thread
                     runOnUiThread(() -> {
-                        setLoading(false);
                         if (user == null) {
+                            setLoading(false);
                             Toast.makeText(this, "Không tìm thấy email", Toast.LENGTH_SHORT).show();
                         } else if (!pass.equals(user.password)) {
+                            setLoading(false);
                             Toast.makeText(this, "Sai mật khẩu", Toast.LENGTH_SHORT).show();
                         } else {
                             // Thành công: Lưu Session và Chuyển hướng
@@ -127,13 +134,25 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void setLoading(boolean loading) {
+        if (loadingOverlay != null) {
+            loadingOverlay.setVisibility(loading ? View.VISIBLE : View.GONE);
+        }
+
+        // Vô hiệu / kích hoạt các input
         btnLogin.setEnabled(!loading);
+        btnGoogleLogin.setEnabled(!loading);
+        etEmail.setEnabled(!loading);
+        etPassword.setEnabled(!loading);
+        cbRemember.setEnabled(!loading);
+
+        // Thay đổi text nút đăng nhập
         btnLogin.setText(loading ? "Đang đăng nhập..." : "Đăng nhập");
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        setLoading(true);
         if (requestCode == GOOGLE_SIGN_IN_CODE) {
             googleLogin.handleActivityResult(data);
         }

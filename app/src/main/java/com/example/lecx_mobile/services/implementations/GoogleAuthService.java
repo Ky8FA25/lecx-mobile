@@ -26,8 +26,10 @@ public class GoogleAuthService implements IGoogleAuthService {
     }
     @Override
     public void startSignIn(Activity activity, int requestCode) {
-        Intent intent = GoogleAuthUtils.getSignInIntent();
-        activity.startActivityForResult(intent, requestCode);
+        Intent intent = GoogleAuthUtils.getSignInIntentForceAccountSelection();
+        if (intent != null) {
+            activity.startActivityForResult(intent, requestCode);
+        }
     }
 
     @Override
