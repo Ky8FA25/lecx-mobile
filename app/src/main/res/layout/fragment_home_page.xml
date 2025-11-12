@@ -26,29 +26,29 @@
                 android:layout_marginBottom="24dp">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Đang học"
+                        android:textColor="#333333"
                         android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:textColor="#333333" />
+                        android:textStyle="bold" />
 
                     <ImageButton
                         android:id="@+id/btnToggleViewLearning"
                         android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/ic_view_list"
+                        android:layout_height="match_parent"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="Chuyển đổi chế độ xem"
                         android:padding="8dp"
                         android:scaleType="fitCenter"
+                        android:src="@drawable/ic_view_list"
                         app:tint="@color/primary" />
                 </LinearLayout>
 
