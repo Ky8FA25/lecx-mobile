@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                 setLoading(true);
                 // 1. Lưu session
                 boolean remember = cbRemember != null && cbRemember.isChecked();
-                Prefs.saveSession(LoginActivity.this, account.id, account.email, remember);
+                Prefs.saveSession(LoginActivity.this, account.id, account.email, remember, account.isEmailConfirmed);
 
                 // 2. Thông báo
                 Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
@@ -110,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             // Thành công: Lưu Session và Chuyển hướng
                             boolean remember = cbRemember != null && cbRemember.isChecked();
-                            Prefs.saveSession(this, user.id, user.email, remember);
+                            Prefs.saveSession(this, user.id, user.email, remember, user.isEmailConfirmed);
                             Toast.makeText(this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
 
                             Intent intent = new Intent(this, MainActivity.class);

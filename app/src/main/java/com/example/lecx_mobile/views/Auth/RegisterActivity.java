@@ -51,7 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onSuccess(Account account) {
                 setLoading(true);
                 // 1. Lưu session
-                Prefs.saveSession(RegisterActivity.this, account.id, account.email, true);
+                Prefs.saveSession(RegisterActivity.this, account.id, account.email, true, account.isEmailConfirmed);
 
                 // 2. Thông báo
                 Toast.makeText(RegisterActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();

@@ -38,6 +38,8 @@ public final class Constants {
     public static final String KEY_EMAIL = "email";
     public static final String KEY_REMEMBER = "remember";
     public static final String KEY_AVATAR = "avatar";
+    public static final String KEY_EMAIL_CONFIRM = "isEmailConfirmed";
+
 
 //    public static final String KEY_IS_ADMIN = "isAdmin"; // Cần nếu có vai trò Admin
 

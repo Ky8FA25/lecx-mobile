@@ -32,6 +32,7 @@ import com.example.lecx_mobile.repositories.interfaces.IQuizRepository;
 import com.example.lecx_mobile.services.implementations.StorageService;
 import com.example.lecx_mobile.services.interfaces.IStorageService;
 import com.example.lecx_mobile.utils.FirebaseStorageUtils;
+import com.example.lecx_mobile.utils.Prefs;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
@@ -498,6 +499,12 @@ public class UpdateQuizFragment extends Fragment {
 
         if (quiz == null) {
             Toast.makeText(requireContext(), "Lỗi: Quiz không tồn tại", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        boolean isEmailConfirmed = Prefs.isEmailConfirmed(requireContext());
+        if (!isEmailConfirmed && isPublic) {
+            Toast.makeText(requireContext(), "Vui lòng xác minh email của bạn để tạo thẻ ghi nhớ công khai.", Toast.LENGTH_SHORT).show();
             return;
         }
 
