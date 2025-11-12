@@ -107,7 +107,7 @@
                 android:layout_height="32dp"
                 android:src="@android:drawable/ic_menu_delete"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Delete"
+                android:contentDescription="Xóa"
                 android:visibility="gone"
                 app:tint="#F44336" />
         </LinearLayout>

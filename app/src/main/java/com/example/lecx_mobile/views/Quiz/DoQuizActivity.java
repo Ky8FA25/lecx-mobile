@@ -584,17 +584,17 @@ public class DoQuizActivity extends AppCompatActivity {
         
         // Customize message based on score
         if (score == totalQuestions) {
-            tvCongratulations.setText("Perfect!");
-            tvMessage.setText("Excellent! You got all questions right!");
+            tvCongratulations.setText("Hoàn hảo!");
+            tvMessage.setText("Xuất sắc! Bạn đã trả lời đúng tất cả câu hỏi!");
         } else if (score >= totalQuestions * 0.8) {
-            tvCongratulations.setText("Great Job!");
-            tvMessage.setText("Well done! You did very well!");
+            tvCongratulations.setText("Làm tốt lắm!");
+            tvMessage.setText("Tuyệt vời! Bạn đã làm rất tốt!");
         } else if (score >= totalQuestions * 0.5) {
-            tvCongratulations.setText("Good Try!");
-            tvMessage.setText("Not bad! Keep practicing!");
+            tvCongratulations.setText("Cố gắng tốt!");
+            tvMessage.setText("Không tệ! Hãy tiếp tục luyện tập!");
         } else {
-            tvCongratulations.setText("Keep Learning!");
-            tvMessage.setText("Don't give up! Practice makes perfect!");
+            tvCongratulations.setText("Tiếp tục học!");
+            tvMessage.setText("Đừng bỏ cuộc! Luyện tập sẽ giúp bạn tiến bộ!");
         }
         
         AlertDialog resultDialog = new AlertDialog.Builder(this)

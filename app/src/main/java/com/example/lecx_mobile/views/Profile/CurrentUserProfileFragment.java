@@ -104,7 +104,7 @@ public class CurrentUserProfileFragment extends Fragment {
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
                             if (user == null) {
-                                Toast.makeText(requireContext(), "User not found or session expired", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(requireContext(), "Không tìm thấy người dùng hoặc phiên đăng nhập đã hết hạn", Toast.LENGTH_SHORT).show();
                             } else {
                                 currentUser = user;
                                 bindUserInfo(user);
@@ -117,7 +117,7 @@ public class CurrentUserProfileFragment extends Fragment {
                 .exceptionally(e -> {
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
-                            Toast.makeText(requireContext(), "Error loading profile: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(requireContext(), "Lỗi khi tải hồ sơ: " + e.getMessage(), Toast.LENGTH_LONG).show();
                             setLoading(false);
                         });
                     }
@@ -209,7 +209,7 @@ public class CurrentUserProfileFragment extends Fragment {
                 .addOnFailureListener(e -> {
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
-                            Toast.makeText(requireContext(), "Failed to upload avatar: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(requireContext(), "Lỗi khi tải ảnh đại diện: " + e.getMessage(), Toast.LENGTH_LONG).show();
                             setLoading(false);
                         });
                     }
@@ -332,7 +332,7 @@ public class CurrentUserProfileFragment extends Fragment {
                                 checkEmailVerification(updatedUser.email);
                                 Toast.makeText(requireContext(), "Cập nhật hồ sơ thành công", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(requireContext(), "Failed to update profile", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(requireContext(), "Cập nhật hồ sơ thất bại", Toast.LENGTH_SHORT).show();
                             }
                             setLoading(false);
                         });
@@ -341,7 +341,7 @@ public class CurrentUserProfileFragment extends Fragment {
                 .exceptionally(e -> {
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
-                            Toast.makeText(requireContext(), "Error updating profile: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(requireContext(), "Lỗi khi cập nhật hồ sơ: " + e.getMessage(), Toast.LENGTH_LONG).show();
                             setLoading(false);
                         });
                     }
@@ -355,7 +355,7 @@ public class CurrentUserProfileFragment extends Fragment {
      */
     private void changePassword(String currentPassword, String newPassword) {
         if (currentUser == null) {
-            Toast.makeText(requireContext(), "User not loaded", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Người dùng chưa được tải", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -387,7 +387,7 @@ public class CurrentUserProfileFragment extends Fragment {
                 .exceptionally(e -> {
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
-                            Toast.makeText(requireContext(), "Error changing password: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(requireContext(), "Lỗi khi đổi mật khẩu: " + e.getMessage(), Toast.LENGTH_LONG).show();
                             setLoading(false);
                         });
                     }
@@ -419,7 +419,7 @@ public class CurrentUserProfileFragment extends Fragment {
                     showVerifyOtpDialog();
                 }))
                 .exceptionally(e -> { runOnUiThreadSafe(() -> {
-                    Toast.makeText(requireContext(), "Send OTP failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(requireContext(), "Gửi mã OTP thất bại: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     setLoading(false);
                 }); return null; });
     }
@@ -429,7 +429,7 @@ public class CurrentUserProfileFragment extends Fragment {
      */
     private void showVerifyOtpDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Verify Email");
+        builder.setTitle("Xác minh Email");
 
         View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_verify_otp, null);
         builder.setView(dialogView);
@@ -441,7 +441,7 @@ public class CurrentUserProfileFragment extends Fragment {
 
         // Update message with email
         if (currentUser != null && currentUser.email != null) {
-            tvOtpMessage.setText("We've sent a verification code to " + currentUser.email + ". Please enter it below.");
+            tvOtpMessage.setText("Đã gửi 1 mã OTP đến email  " + currentUser.email + ". Hãy nhập OTP.");
         }
 
         // Start timer
@@ -455,8 +455,8 @@ public class CurrentUserProfileFragment extends Fragment {
             }
         });
 
-        builder.setPositiveButton("Verify", null);
-        builder.setNegativeButton("Cancel", (dialog, which) -> {
+        builder.setPositiveButton("Xác minh", null);
+        builder.setNegativeButton("Hủy", (dialog, which) -> {
             cancelOtpTimer();
             dialog.cancel();
         });
@@ -467,13 +467,13 @@ public class CurrentUserProfileFragment extends Fragment {
                 String otpCode = etOtpCode.getText().toString().trim();
 
                 if (otpCode.isEmpty()) {
-                    etOtpCode.setError("Please enter OTP code");
+                    etOtpCode.setError("Hãy nhập mã OTP");
                     etOtpCode.requestFocus();
                     return;
                 }
 
                 if (otpCode.length() != 6) {
-                    etOtpCode.setError("OTP code must be 6 digits");
+                    etOtpCode.setError("Mã OTP có ít nhất 6 kí tự");
                     etOtpCode.requestFocus();
                     return;
                 }
@@ -506,7 +506,7 @@ public class CurrentUserProfileFragment extends Fragment {
                     setLoading(false);
                 }))
                 .exceptionally(e -> { runOnUiThreadSafe(() -> {
-                    Toast.makeText(requireContext(), "Verify OTP failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(requireContext(), "Xác minh OTP thất bại: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     setLoading(false);
                 }); return null; });
     }
@@ -524,7 +524,7 @@ public class CurrentUserProfileFragment extends Fragment {
             @Override
             public void onTick(long millisUntilFinished) {
                 long seconds = millisUntilFinished / 1000;
-                tvOtpTimer.setText("Resend in " + seconds + "s");
+                tvOtpTimer.setText("Gửi lại trong " + seconds + " giây");
             }
 
             @Override

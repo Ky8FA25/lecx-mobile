@@ -171,7 +171,7 @@ public class QuizAdapter extends RecyclerView.Adapter<QuizAdapter.QuizViewHolder
                     ivAuthorAvatar.setImageResource(R.drawable.ic_profile);
                 }
             } else {
-                tvAuthorName.setText("Unknown");
+                tvAuthorName.setText("Không xác định");
                 ivAuthorAvatar.setImageResource(R.drawable.ic_profile);
             }
 

@@ -21,7 +21,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Your Score"
+        android:text="Điểm số của bạn"
         android:textSize="16sp"
         android:textColor="@color/text_secondary"
         android:layout_marginBottom="8dp" />
@@ -61,7 +61,7 @@
         android:id="@+id/btnBackToHome"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:text="Back to Home"
+        android:text="Trở về trang chủ"
         android:textSize="16sp"
         android:textStyle="bold"
         app:backgroundTint="@color/primary"

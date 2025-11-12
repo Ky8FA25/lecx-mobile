@@ -193,7 +193,7 @@ public class HomePageFragment extends Fragment {
                 .exceptionally(e -> {
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
-                            Toast.makeText(requireContext(), "Error loading learning quizzes: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(requireContext(), "Lỗi khi tải quiz đang học: " + e.getMessage(), Toast.LENGTH_LONG).show();
                             checkLoadingComplete();
                         });
                     }
@@ -229,7 +229,7 @@ public class HomePageFragment extends Fragment {
                 .exceptionally(e -> {
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
-                            Toast.makeText(requireContext(), "Error loading my quizzes: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(requireContext(), "Lỗi khi tải quiz của tôi: " + e.getMessage(), Toast.LENGTH_LONG).show();
                             checkLoadingComplete();
                         });
                     }

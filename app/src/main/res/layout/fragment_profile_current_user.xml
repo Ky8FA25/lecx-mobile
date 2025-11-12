@@ -49,14 +49,14 @@
                     android:layout_marginBottom="0dp"
                     app:fabSize="mini"
                     app:srcCompat="@android:drawable/ic_menu_camera"
-                    android:contentDescription="Upload Avatar" />
+                    android:contentDescription="Tải ảnh đại diện" />
             </RelativeLayout>
 
             <TextView
                 android:id="@+id/tvFullName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Full Name"
+                android:text="Tên đầy đủ"
                 android:textStyle="bold"
                 android:textSize="22sp"
                 android:textColor="#333333"
@@ -116,7 +116,7 @@
                     android:id="@+id/btnVerifyEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Verify Email"
+                    android:text="Xác minh Email"
                     android:textSize="12sp"
                     android:layout_marginTop="8dp"
                     android:visibility="gone"
@@ -166,7 +166,7 @@
                             android:id="@+id/tvFullNameValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Full Name"
+                            android:text="Tên đầy đủ"
                             android:textSize="14sp"
                             android:textColor="#666666"
                             android:layout_marginTop="4dp" />
@@ -207,7 +207,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Username"
+                            android:text="Tên người dùng"
                             android:textStyle="bold"
                             android:textSize="16sp"
                             android:textColor="#333333" />

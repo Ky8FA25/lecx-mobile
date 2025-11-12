@@ -75,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Exception e) {
-                Toast.makeText(LoginActivity.this, "Đăng nhập thấy bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Đăng nhập thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                     // Xử lý lỗi trên Main Thread
                     runOnUiThread(() -> {
                         setLoading(false);
-                        Toast.makeText(this, "Đăng nhập thát bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Đăng nhập thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
                     return null;
                 });
@@ -128,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setLoading(boolean loading) {
         btnLogin.setEnabled(!loading);
-        btnLogin.setText(loading ? "Đăng đăng nhập..." : "Đăng nhập");
+        btnLogin.setText(loading ? "Đang đăng nhập..." : "Đăng nhập");
     }
 
     @Override

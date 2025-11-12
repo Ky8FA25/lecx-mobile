@@ -27,7 +27,7 @@
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_arrow_back"
-            android:contentDescription="Back"
+            android:contentDescription="Quay lại"
             app:tint="@color/white" />
 
         <TextView
@@ -242,7 +242,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"
-            android:contentDescription="Don't Know"
+            android:contentDescription="Không nhớ"
             app:srcCompat="@drawable/ic_close"
             app:backgroundTint="#FF6B6B"
             app:tint="@color/white"
@@ -255,7 +255,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:contentDescription="I Know"
+            android:contentDescription="Nhớ"
             app:srcCompat="@drawable/ic_check"
             app:backgroundTint="#51CF66"
             app:tint="@color/white"
