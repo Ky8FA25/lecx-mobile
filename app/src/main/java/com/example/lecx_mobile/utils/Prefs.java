@@ -9,11 +9,12 @@ public class Prefs {
         return ctx.getSharedPreferences(Constants.PREF_AUTH, Context.MODE_PRIVATE);
     }
 
-    public static void saveSession(Context ctx, int userId, String email, boolean remember) {
+    public static void saveSession(Context ctx, int userId, String email, boolean remember, boolean isEmailConfirm) {
         sp(ctx).edit()
                 .putInt(Constants.KEY_USER_ID, userId)
                 .putString(Constants.KEY_EMAIL, email)
                 .putBoolean(Constants.KEY_REMEMBER, remember)
+                .putBoolean(Constants.KEY_EMAIL_CONFIRM, isEmailConfirm)
 //                .putBoolean(Constants.KEY_IS_ADMIN, isAdmin)
                 .apply();
     }
@@ -36,6 +37,10 @@ public class Prefs {
 
     public static boolean isRemember(Context ctx) {
         return sp(ctx).getBoolean(Constants.KEY_REMEMBER, false);
+    }
+
+    public static boolean isEmailConfirmed(Context ctx) {
+        return sp(ctx).getBoolean(Constants.KEY_EMAIL_CONFIRM, false);
     }
 
 //    public static boolean isAdmin(Context ctx) {

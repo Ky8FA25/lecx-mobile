@@ -367,6 +367,12 @@ public class AddQuizFragment extends Fragment {
             return;
         }
 
+        boolean isEmailConfirmed = Prefs.isEmailConfirmed(requireContext());
+        if (!isEmailConfirmed && isPublic) {
+            setLoading(false);
+            Toast.makeText(requireContext(), "Vui lòng xác minh email của bạn để tạo thẻ ghi nhớ công khai.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         // Create quiz
         Quiz quiz = new Quiz();
         quiz.title = title;
