@@ -15,7 +15,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="10dp">
 
             <!-- Section: Quiz đang học -->
             <LinearLayout
@@ -28,8 +29,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp">
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="0dp"
@@ -47,9 +47,9 @@
                         android:src="@drawable/ic_view_list"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="Chuyển đổi chế độ xem"
-                        android:tint="@color/primary"
                         android:padding="8dp"
-                        android:scaleType="fitCenter" />
+                        android:scaleType="fitCenter"
+                        app:tint="@color/primary" />
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -83,8 +83,7 @@
                     android:text="Quiz của tôi"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="#333333"
-                    android:layout_marginBottom="12dp" />
+                    android:textColor="#333333" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvMyQuizzes"
