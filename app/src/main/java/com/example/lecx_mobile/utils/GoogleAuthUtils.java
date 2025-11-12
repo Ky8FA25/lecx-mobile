@@ -44,6 +44,14 @@ public class GoogleAuthUtils {
                 .getIdToken();
     }
 
+    public static Intent getSignInIntentForceAccountSelection() {
+        if (mGoogleSignInClient != null) {
+            mGoogleSignInClient.signOut();  // xóa cache tài khoản cũ
+            return mGoogleSignInClient.getSignInIntent();
+        }
+        return null;
+    }
+
     public interface OnAuthCompleteListener {
         void onSuccess(FirebaseUser user);
         void onFailure(Exception e);

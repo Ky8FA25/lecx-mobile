@@ -28,8 +28,10 @@ public class GoogleLoginButton {
         this.button = button;
         this.googleService = googleService;
         this.requestCode = requestCode;
-
-        this.button.setOnClickListener(v -> googleService.startSignIn(activity, requestCode));
+        this.button.setOnClickListener(v -> {
+            button.setEnabled(false); // disable nút Google để tránh nhấn nhiều lần
+            googleService.startSignIn(activity, requestCode); // mở giao diện chọn tài khoản
+        });
     }
 
     public void setOnLoginListener(OnLoginListener listener) {

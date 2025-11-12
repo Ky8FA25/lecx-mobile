@@ -3,6 +3,7 @@ package com.example.lecx_mobile.views.Auth;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,8 +25,11 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText etFullName, etEmail, etPassword, etConfirmPassword;
     private MaterialButton btnSignUp;
     private TextView tvLogin;
+    private  MaterialButton btnGoogleLogin;
     private GoogleLoginButton googleLogin;
     private static final int GOOGLE_SIGN_IN_CODE = 1001;
+    private View loadingOverlay;
+
 
     // Khởi tạo Repository theo yêu cầu
     private final IAccountRepository repo = new AccountRepository();
@@ -34,17 +38,18 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth_register);
+        loadingOverlay = findViewById(R.id.loadingOverlay);
 
         initViews();
         setupListeners();
 
-        MaterialButton btnGoogleLogin = findViewById(R.id.btnGoogleLogin);
         GoogleAuthService googleService = new GoogleAuthService(this);
 
         googleLogin = new GoogleLoginButton(this, btnGoogleLogin, googleService, GOOGLE_SIGN_IN_CODE);
         googleLogin.setOnLoginListener(new GoogleLoginButton.OnLoginListener() {
             @Override
             public void onSuccess(Account account) {
+                setLoading(true);
                 // 1. Lưu session
                 Prefs.saveSession(RegisterActivity.this, account.id, account.email, true);
 
@@ -62,6 +67,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Exception e) {
+                setLoading(false);
                 Toast.makeText(RegisterActivity.this, "Đăng nhập thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -74,6 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
         btnSignUp = findViewById(R.id.btnSignUp);
         tvLogin = findViewById(R.id.tvLogin);
+        btnGoogleLogin = findViewById(R.id.btnGoogleLogin);
     }
 
     private void setupListeners() {
@@ -104,6 +111,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void performSignUp(String fullName, String email, String password) {
+        setLoading(true);
         btnSignUp.setEnabled(false);
         btnSignUp.setText("Đang tạo...");
 
@@ -111,7 +119,7 @@ public class RegisterActivity extends AppCompatActivity {
         repo.existsByEmail(email)
                 .thenAccept(exists -> {
                     if (exists) {
-                        // Cập nhật UI trên Main Thread
+                        setLoading(false);
                         runOnUiThread(() -> {
                             btnSignUp.setEnabled(true);
                             btnSignUp.setText("Đăng kí");
@@ -167,8 +175,26 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        setLoading(true);
         if (requestCode == GOOGLE_SIGN_IN_CODE) {
             googleLogin.handleActivityResult(data);
         }
+    }
+
+    private void setLoading(boolean loading) {
+        if (loadingOverlay != null) {
+            loadingOverlay.setVisibility(loading ? View.VISIBLE : View.GONE);
+        }
+
+        // Vô hiệu hóa / kích hoạt tất cả input và button
+        etFullName.setEnabled(!loading);
+        etEmail.setEnabled(!loading);
+        etPassword.setEnabled(!loading);
+        etConfirmPassword.setEnabled(!loading);
+        btnSignUp.setEnabled(!loading);
+        if (btnGoogleLogin != null) btnGoogleLogin.setEnabled(!loading);
+
+        // Thay đổi text nút Sign Up
+        btnSignUp.setText(loading ? "Đang tạo..." : "Đăng kí");
     }
 }

@@ -165,8 +165,8 @@ public class CurrentUserProfileFragment extends Fragment {
         // Load avatar
         Glide.with(this)
                 .load(user.avatar)
-                .placeholder(R.drawable.ic_profile)
-                .error(R.drawable.ic_profile)
+                .placeholder(R.drawable.bg_card)
+                .error(R.drawable.bg_card)
                 .circleCrop()
                 .into(binding.ivAvatar);
     }
@@ -191,6 +191,7 @@ public class CurrentUserProfileFragment extends Fragment {
     }
 
     private void handleLogout() {
+        setLoading(true);
         Prefs.clearSession(requireContext());
         Toast.makeText(requireContext(), "Đã đăng xuất", Toast.LENGTH_SHORT).show();
 
