@@ -40,7 +40,7 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_profile"
+                    android:src="@drawable/bg_card"
                     app:shapeAppearanceOverlay="@style/CircleImageView"
                     android:elevation="2dp"
                     android:clickable="true"
@@ -52,9 +52,11 @@
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@id/ivAvatar"
                     android:layout_alignEnd="@id/ivAvatar"
-                    android:layout_marginEnd="0dp"
-                    android:layout_marginBottom="0dp"
+                    android:layout_marginEnd="-7dp"
+                    android:layout_marginBottom="-7dp"
                     app:fabSize="mini"
+                    android:scaleX="0.8"
+                    android:scaleY="0.8"
                     app:srcCompat="@android:drawable/ic_menu_camera"
                     android:contentDescription="Tải ảnh đại diện" />
             </RelativeLayout>
@@ -132,7 +134,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="16dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="5dp">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
