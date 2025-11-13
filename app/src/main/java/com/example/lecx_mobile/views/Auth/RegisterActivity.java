@@ -1,7 +1,12 @@
 package com.example.lecx_mobile.views.Auth;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -111,13 +116,27 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void performSignUp(String fullName, String email, String password) {
+        if (!isInternetAvailable()) {
+            Toast.makeText(this, "Không có kết nối Internet!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         setLoading(true);
         btnSignUp.setEnabled(false);
         btnSignUp.setText("Đang tạo...");
 
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable timeoutRunnable = () -> {
+            setLoading(false);
+            btnSignUp.setEnabled(true);
+            btnSignUp.setText("Đăng kí");
+            Toast.makeText(this, "Không thể kết nối server (timeout)", Toast.LENGTH_SHORT).show();
+        };
+        handler.postDelayed(timeoutRunnable, 10000); // 10 giây
+
         // BƯỚC 1: Kiểm tra Email đã tồn tại chưa
         repo.existsByEmail(email)
                 .thenAccept(exists -> {
+                    handler.removeCallbacks(timeoutRunnable);
                     if (exists) {
                         setLoading(false);
                         runOnUiThread(() -> {
@@ -162,7 +181,7 @@ public class RegisterActivity extends AppCompatActivity {
                             });
                 })
                 .exceptionally(e -> {
-                    // Xử lý lỗi kiểm tra tồn tại email
+                    handler.removeCallbacks(timeoutRunnable);
                     runOnUiThread(() -> {
                         btnSignUp.setEnabled(true);
                         btnSignUp.setText("Đăng kí");
@@ -196,5 +215,18 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Thay đổi text nút Sign Up
         btnSignUp.setText(loading ? "Đang tạo..." : "Đăng kí");
+    }
+
+    private boolean isInternetAvailable() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            Network network = cm.getActiveNetwork();
+            if (network == null) return false;
+            NetworkCapabilities caps = cm.getNetworkCapabilities(network);
+            return caps != null &&
+                    (caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                            caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR));
+        }
+        return false;
     }
 }
