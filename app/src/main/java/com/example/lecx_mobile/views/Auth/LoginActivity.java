@@ -1,7 +1,12 @@
 package com.example.lecx_mobile.views.Auth;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +26,8 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.concurrent.TimeUnit;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -87,6 +94,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void handleLogin() {
+        if (!isInternetAvailable()) {
+            Toast.makeText(this, "Không có kết nối Internet!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String email = safeText(etEmail);
         String pass  = safeText(etPassword);
 
@@ -95,11 +107,17 @@ public class LoginActivity extends AppCompatActivity {
         if (!Validator.isValidPassword(pass)) { etPassword.setError("Mật khẩu ít nhất 6 kí tự"); etPassword.requestFocus(); return; }
 
         setLoading(true);
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable timeoutRunnable = () -> {
+            setLoading(false);
+            Toast.makeText(this, "Không thể kết nối server (timeout)", Toast.LENGTH_SHORT).show();
+        };
+        handler.postDelayed(timeoutRunnable, 10000); // 10 giây
 
         // GỌI REPOSITORY TRỰC TIẾP
         repo.getByEmail(email)
                 .thenAccept(user -> {
-                    // Cập nhật UI trên Main Thread
+                    handler.removeCallbacks(timeoutRunnable);
                     runOnUiThread(() -> {
                         if (user == null) {
                             setLoading(false);
@@ -120,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
                     });
                 })
                 .exceptionally(e -> {
-                    // Xử lý lỗi trên Main Thread
+                    handler.removeCallbacks(timeoutRunnable);
                     runOnUiThread(() -> {
                         setLoading(false);
                         Toast.makeText(this, "Đăng nhập thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -156,5 +174,18 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == GOOGLE_SIGN_IN_CODE) {
             googleLogin.handleActivityResult(data);
         }
+    }
+
+    private boolean isInternetAvailable() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            Network network = cm.getActiveNetwork();
+            if (network == null) return false;
+            NetworkCapabilities caps = cm.getNetworkCapabilities(network);
+            return caps != null &&
+                    (caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                            caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR));
+        }
+        return false;
     }
 }
